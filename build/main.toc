@@ -1,0 +1,18 @@
+\babel@toc {brazil}{}\relax 
+\contentsline {chapter}{\numberline {1}Introdução}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Escopo desta Atividade Prática teste}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objetivos formativos}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Contribuições esperadas}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Métodos de Busca}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Definição e utilitários do tabuleiro}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Funções de solubilidade}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Gerador de tabuleiros aleatórios solucionáveis}{4}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Definição das estruturas de dados (nó)}{5}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Heurísticas}{6}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Reconstrução do caminho}{6}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Algoritmo de busca (UCS e $A^*$)}{7}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Impressão do caminho solução}{8}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Exemplo de execução e saída}{9}{section.2.9}%
+\contentsline {chapter}{\numberline {3}Conclusão}{10}{chapter.3}%
+\contentsline {chapter}{\numberline {4}CONCLUSÃO}{11}{chapter.4}%
+\contentsfinish 

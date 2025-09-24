@@ -1,0 +1,76 @@
+% ===========================
+% pacotes.tex  (ABNT - autor-data)
+% ===========================
+
+% --- Codificação e idioma ---
+\usepackage[utf8]{inputenc}   % pdflatex
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+
+% --- Margens ABNT (3 cm esq/topo, 2 cm dir/base) ---
+\usepackage[a4paper,left=3cm,right=2cm,top=3cm,bottom=2cm]{geometry}
+
+% --- Tipografia e espaçamento ---
+\usepackage{microtype}   % melhor quebra/justificação
+\usepackage{setspace}    % \OnehalfSpacing no miolo
+\usepackage{ragged2e}    % \justifying para garantir texto justificado
+\usepackage{indentfirst} % 1º parágrafo de cada seção com recuo
+
+% --- Matemática básica ---
+\usepackage{amsmath,amssymb}
+
+% --- Figuras e tabelas ---
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor} % cores para tabela e \rowcolor
+\usepackage{colortbl}
+\usepackage{array,booktabs,tabularx,longtable}
+\usepackage{float}        % [H] se necessário
+
+% --- Legendas (estilo global; títulos PT-BR vêm em tipografia.tex se preferir) ---
+\usepackage{caption}
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  labelsep=colon,
+  justification=raggedright,
+  singlelinecheck=false
+}
+
+% --- URLs e quebras de linha longas ---
+\usepackage{xurl}     % permite quebra de URLs
+\urlstyle{same}
+
+% --- Hiperlinks (cores discretas, padrão acadêmico) ---
+\usepackage[hidelinks]{hyperref}
+% Se preferir colorido discreto, troque por:
+% \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+
+% --- Citações ABNT (autor-data) + estilo BibTeX ---
+\usepackage[alf]{abntex2cite}
+% No main.tex, use: \bibliographystyle{abntex2-alf} \bibliography{Bibliografia}
+
+% --- Código fonte (minted v3) ---
+% Requer: -shell-escape e python+pygments+latexminted instalados
+\usepackage[newfloat]{minted}
+\setminted{
+  frame=lines,
+  linenos,
+  fontsize=\footnotesize,
+  breaklines,
+  autogobble
+}
+\usemintedstyle{friendly}
+
+% --- Índice remissivo (se usar \printindex) ---
+\usepackage{makeidx}
+\makeindex
+
+% --- Listas mais controladas (opcional) ---
+\usepackage{enumitem}
+\setlist{itemsep=0pt,topsep=4pt}
+
+% --- Evita viúvas/órfãs muito feias (opcional) ---
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000

@@ -1,0 +1,150 @@
+ %%%%%%%%%% Tipografia dos Capitulos %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\usepackage[explicit]{titlesec}
+		\usepackage[dotinlabels]{titletoc}
+		
+        \newcommand{\cor}{black} % Definição do novo comando para a cor
+        \newcommand{\cTT}{\rowcolor{\cor!10}} % Título tabela
+        \newcommand{\cLT}{\rowcolor{\cor!5}} % Título tabela
+        %\definecolor{azule}{RGB}{11,131,144}
+        %\newcommand{\cor}{azule} % Definição do novo comando para a cor
+        %\newcommand{\cTT}{\rowcolor{\cor!10}} % Título tabela
+        %\newcommand{\cLT}{\rowcolor{\cor!5}} % Título tabela
+		
+		% % chapter tiltes formatting
+		% \titleformat{\chapter}[display]
+		% 	{\normalfont\sffamily\bfseries\LARGE\color{black}}
+		% 	{\renewcommand{\thechapter}{\arabic{chapter}}\hspace*{0.5em}\colorbox{black}{%
+		% 	%{\renewcommand{\thechapter}{\Roman{chapter}}\hspace*{0.5em}\colorbox{black}{%
+		% 		\parbox[c][1.2cm][c]{1cm}{% Altura e largura do quadrado do numero do capitulo
+		% 			\centering\textcolor{white}  {\Huge\thechapter}}}}
+		% 	{-0.5ex} % Distância do quadrado do número do capítulo ate o titulo do capitulo
+		% 	{\titlerule\vspace{.7ex}\filleft\MakeUppercase{#1}}
+		% 	[\vspace{.2ex}\titlerule]
+		% % chapter tiltes spacing
+		% \titlespacing*{\chapter}{0pt}{50pt}{80pt}
+
+		% % section tiltes formatting
+		% \titleformat{\section}
+		% 	{\normalfont\Large\bfseries\color{black}}{\MySecSquare\ \thesection}{1em}{#1}
+		% \titleformat{name=\section,numberless}
+		% 	{\normalfont\Large\bfseries\color{black}}{\MySecSquare}{1em}{#1}
+			
+		% % subsection tiltes formatting
+		% \titleformat{\subsection}
+		% 	{\normalfont\large\bfseries\color{black}}{\MySecSquare\ \thesubsection}{1em}{#1}
+		% \titleformat{name=\subsection,numberless}
+		% 	{\normalfont\large\bfseries\color{black}}{\MySecSquare}{1em}{#1}
+
+		% formatting for chapter entries in ToC  
+		\titlecontents{chapter}
+			[3.8em]{ } % 1.5
+			{\sffamily\bfseries\contentslabel{3.1em}} % 1.5
+			{\hspace*{0em}} % -1.5
+			{\titlerule*[1pc]{.}\sffamily\bfseries\contentspage}
+
+ 
+		% formatting for section entries in ToC  
+		\titlecontents{section}
+			[3.8em]{}
+			{\sffamily\bfseries\contentslabel{3.1em}} % 2.3
+			{\hspace*{0em}} % -2.3
+			{\titlerule*[1pc]{.}\sffamily\bfseries\contentspage}
+			
+		% formatting for subsection entries in ToC  
+		\titlecontents{subsection}
+			[3.8em]{} % 6.9
+			{\sffamily\contentslabel{3.45em}} % 3.1
+			{\hspace*{0em}} % -3.1
+			{\titlerule*[1pC]{.}\sffamily\contentspage}
+
+		% Square to be used in itemize
+		\newcommand\MySquare{%
+			\leavevmode\hbox to 1.2ex{\hss\vrule height .9ex width .7ex depth -.2ex\hss}}
+		% Square to be used in section titles
+		\newcommand\MySecSquare{%
+			\leavevmode\hbox to 1.2ex{\hss\vrule height 1.3ex width 1.1ex depth -.2ex\hss}}
+ 
+		% First level of itemize uses a square
+		\renewcommand\labelitemi{\MySquare}
+
+
+		
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\usepackage{blindtext}
+
+\makeatletter
+\if@twoside
+  \def\ps@headings{%
+      %\let\@oddfoot\@empty\let\@evenfoot\@empty       % No footer
+      \def\@evenhead{\footnotesize\thepage\hfil\leftmark}%   % Header on even pages small
+      \def\@oddhead{\footnotesize\rightmark\hfil\thepage}%   % Header on  odd pages small
+      \let\@mkboth\markboth
+    \def\chaptermark##1{%
+      \markboth{%\scshape%                             % Chapters in Header capitalized
+        \ifnum \c@secnumdepth >\m@ne
+            \@chapapp\ \thechapter. \ %
+        \fi
+        ##1}{}}%
+    \def\sectionmark##1{%
+      \markright{%\scshape%                            % Sections in Header capitalized
+        \ifnum \c@secnumdepth >\z@
+          \thesection. \ %
+        \fi
+        ##1}}
+    \def\subsectionmark##1{%
+      \markright{%\scshape%                            % Sections in Header capitalized
+        \ifnum \c@secnumdepth >\z@
+          \thesection. \ %
+        \fi
+        ##1}}}
+
+
+\makeatother
+\pagestyle{headings}
+
+
+%%% CAPTION (para ajustar legenda das figuras e tabelas) %%%
+\usepackage{caption}
+
+\captionsetup[figure]{
+  labelfont={bf,color=\cor}, % "Figura 1:" em negrito e azul
+  textfont=normalfont           % Título da legenda em fonte normal
+}
+\captionsetup[table]{
+  labelfont={bf,color=\cor}, % "Tabela 1:" em negrito e azul
+  textfont=normalfont           % Título da legenda em fonte normal
+}
+
+%%% LISTAS DE FIGURAS E TABELAS %%%
+    \usepackage{tocbasic}
+
+% Prefixo colorido e em negrito
+    \newcommand\entrynumberwithprefix[2]{\textbf{\textcolor{\cor}{#1~#2:}}\hfill}
+
+% FIGURAS
+    \DeclareTOCStyleEntry[  entrynumberformat=\entrynumberwithprefix{\figurename},
+    dynnumwidth,
+    numsep=1em
+    ]{tocline}{figure}
+
+% TABELAS
+    \DeclareTOCStyleEntry[    entrynumberformat=\entrynumberwithprefix{\tablename},
+    dynnumwidth,
+    numsep=1em
+    ]{tocline}{table}
+%%% TÍTULOS das legendas: “Figura” e “Tabela” %%%
+    \renewcommand{\figurename}{Figura}
+    \renewcommand{\tablename}{Tabela}
+
+%%% Posição do cabeçalho
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % Limpa todos os campos do cabeçalho/rodapé
+
+% Cabeçalho:
+\fancyhead[C]{\small \leftmark}  % Centralizado
+%\fancyhead[LE]{\small \leftmark}  % Left Even: página par (esquerda)
+%\fancyhead[RO]{\small \leftmark}  % Right Odd: página ímpar (direita)
+% Rodapé com numeração no centro, por exemplo:
+\fancyfoot[C]{\thepage}
+

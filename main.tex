@@ -1,0 +1,71 @@
+\documentclass[a4paper,12pt,openany,twoside]{book}
+
+% ========================
+% Pacotes e estilo
+% ========================
+\input{pacotes}     % (ABNT autor–data, geometry, minted, etc.)
+\input{tipografia}  % (títulos, cabeçalho/rodapé, captions PT-BR)
+
+% Recuo e espaçamento ABNT (reforço aqui para ficar explícito)
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+\begin{document}
+
+% ========================
+% Pré-texto (simples e romano)
+% ========================
+\singlespacing
+\pagenumbering{roman}
+
+\input{Capa}
+
+% Liste apenas o que realmente usar
+% \listoftables
+\listoffigures
+\newpage
+
+\tableofcontents
+\newpage
+
+% ========================
+% Texto principal (1,5 e arábico)
+% ========================
+\clearpage
+\pagenumbering{arabic}
+\onehalfspacing      % <<< corrigido (setspace)
+\justifying          % requer \usepackage{ragged2e}
+
+% --------- Capítulo 1: Introdução ---------
+\chapter{Introdução}\label{cap:introducao}
+% OBS.: remova '\section{Introdução}' de Seções/1-Introdução.tex
+\input{Seções/1-Introdução.tex}
+
+% --------- Capítulo 2: Métodos de Busca ---------
+\chapter{Métodos de Busca}\label{cap:metodos}
+\input{Seções/2-Métodos de busca.tex}
+
+% --------- Capítulo 3: Conclusão ---------
+\chapter{Conclusão}\label{cap:conclusao}
+\input{Seções/3-Conclusão.tex}
+
+% ========================
+% Referências (ABNT autor–data)
+% ========================
+\clearpage
+\bibliographystyle{abntex2-alf}
+\bibliography{Bibliografia}
+
+% ========================
+% Apêndices (opcional)
+% ========================
+% \appendix
+% \chapter{Título do Apêndice}
+% \input{Seções/Apendice.tex}
+
+% ========================
+% Índice remissivo (se usado)
+% ========================
+\printindex
+
+\end{document}

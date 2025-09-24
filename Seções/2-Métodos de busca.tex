@@ -1,0 +1,306 @@
+% =========================================================
+% Capítulo 2 — Métodos de Busca
+% (este arquivo é incluído pelo main.tex dentro de \chapter)
+% =========================================================
+
+\section{Definição e utilitários do tabuleiro}
+
+O \emph{8-puzzle} é representado por uma matriz $3\times 3$ cujas peças numeradas ocupam oito posições e um espaço vazio ocupa a nona. Usaremos o valor \textbf{9} para representar esse espaço. Para facilitar comparações e hashing em estruturas de dados (e.g., dicionários e conjuntos), convertemos a representação matricial em tupla linear e vice-versa.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+# Dimensões e estado objetivo (9 = espaço vazio)
+LINHAS, COLS = 3, 3
+TABULEIRO_OBJETIVO = [[1, 2, 3],
+                       [4, 5, 6],
+                       [7, 8, 9]]
+
+def tabuleiro_para_tupla(tabuleiro):
+    """Converte lista de listas (3x3) em tupla linear de tamanho 9."""
+    return tuple(tabuleiro[i][j] for i in range(LINHAS) for j in range(COLS))
+
+def tupla_para_tabuleiro(t):
+    """Converte tupla linear (9) em lista de listas (3x3)."""
+    return [list(t[i*COLS:(i+1)*COLS]) for i in range(LINHAS)]
+
+def desenhar_tabuleiro(tabuleiro):
+    """Imprime o tabuleiro linha a linha (útil para depuração)."""
+    for linha in tabuleiro:
+        print(linha)
+\end{minted}
+
+\noindent
+Com isso, qualquer estado é uma tupla de nove inteiros, o que simplifica:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \emph{hashing} (armazenamento em \texttt{set}/\texttt{dict} para checagem de visitados);
+  \item comparação por igualdade (detecção de estados repetidos);
+  \item custo de cópia (tuplas são imutáveis e leves).
+\end{itemize}
+
+% ---------------------------------------------------------
+
+\section{Funções de solubilidade}
+
+Nem toda permutação de peças é solucionável. Para o tabuleiro $3\times 3$, uma configuração é solucionável se e somente se o número de \emph{inversões} (pares fora de ordem, ignorando o vazio) é \textbf{par}. A seguir, implementamos a contagem de inversões e o teste de solubilidade.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+def contagem_inversoes(tabuleiro):
+    """Conta inversões (pares fora de ordem) ignorando o 9."""
+    flat = [x for row in tabuleiro for x in row if x != 9]
+    inv = 0
+    for i in range(len(flat)):
+        for j in range(i + 1, len(flat)):
+            if flat[i] > flat[j]:
+                inv += 1
+    return inv
+
+def eh_soluvel(tabuleiro):
+    """Retorna True se o número de inversões é par (caso 3x3)."""
+    return contagem_inversoes(tabuleiro) % 2 == 0
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Gerador de tabuleiros aleatórios solucionáveis}
+
+Para gerar instâncias \emph{seguramente solucionáveis}, partimos do objetivo e aplicamos uma sequência de movimentos válidos do espaço vazio. Assim, a solubilidade é preservada.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+import random
+
+def tabuleiro_aleatorio_soluvel(movimentos_embaralhar=40, seed=None):
+    """Gera um tabuleiro aleatório solucionável a partir do objetivo."""
+    if seed is not None:
+        random.seed(seed)
+
+    tabuleiro = [linha[:] for linha in TABULEIRO_OBJETIVO]
+    t = tabuleiro_para_tupla(tabuleiro)
+
+    def pos_branco(t):
+        """Retorna (i, j) do espaço vazio (valor 9) em t."""
+        idx = t.index(9)
+        return divmod(idx, COLS)
+
+    for _ in range(movimentos_embaralhar):
+        i, j = pos_branco(t)
+        movimentos = []
+        if i > 0:           movimentos.append((-1, 0))
+        if i < LINHAS - 1:  movimentos.append(( 1, 0))
+        if j > 0:           movimentos.append(( 0,-1))
+        if j < COLS - 1:    movimentos.append(( 0, 1))
+        di, dj = random.choice(movimentos)
+        ni, nj = i + di, j + dj
+
+        lst = list(t)
+        idx1, idx2 = i*COLS + j, ni*COLS + nj
+        lst[idx1], lst[idx2] = lst[idx2], lst[idx1]
+        t = tuple(lst)
+
+    return tupla_para_tabuleiro(t)
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Definição das estruturas de dados (nó)}
+
+Utilizamos uma classe \texttt{No} para encapsular: estado (tupla), ponteiro para o pai (para reconstrução de solução) e custo acumulado. O método \texttt{expandir} gera sucessores ao mover o vazio nas quatro direções válidas.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+from dataclasses import dataclass, field
+
+@dataclass(order=True)
+class NoPriorizado:
+    """Pacote (f, tie-breaker, nó) para a fila de prioridade."""
+    prioridade: int
+    contador: int
+    no: object = field(compare=False)
+
+@dataclass
+class No:
+    tabuleiro: tuple
+    pai: object = None
+    custo: int = 0
+
+    def pos_branco(self):
+        idx = self.tabuleiro.index(9)
+        return divmod(idx, COLS)
+
+    def expandir(self):
+        i, j = self.pos_branco()
+        movimentos = [(-1,0), (1,0), (0,-1), (0,1)]
+        filhos = []
+        for di, dj in movimentos:
+            ni, nj = i + di, j + dj
+            if 0 <= ni < LINHAS and 0 <= nj < COLS:
+                nova_lista = list(self.tabuleiro)
+                idx1 = i*COLS + j
+                idx2 = ni*COLS + nj
+                nova_lista[idx1], nova_lista[idx2] = nova_lista[idx2], nova_lista[idx1]
+                filhos.append(No(tuple(nova_lista), pai=self, custo=self.custo + 1))
+        return filhos
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Heurísticas}
+
+Para o $A^*$, consideramos duas heurísticas clássicas admissíveis:
+\begin{enumerate}[label=(\alph*),leftmargin=*,itemsep=0pt,topsep=2pt]
+  \item \textbf{Peças fora do lugar} (\emph{misplaced tiles}): número de peças que não estão em sua posição objetivo;
+  \item \textbf{Distância de Manhattan}: soma, para cada peça, das distâncias de Manhattan entre a posição atual e a posição objetivo.
+\end{enumerate}
+A seguir, implementações em tempo linear no tamanho do estado.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+def objetivo_tupla():
+    return tabuleiro_para_tupla(TABULEIRO_OBJETIVO)
+
+_GOAL = objetivo_tupla()
+# Mapa: valor -> (linha, coluna) no objetivo (ignora o 9)
+GOAL_POS = {v: divmod(i, COLS) for i, v in enumerate(_GOAL) if v != 9}
+
+def distancia_manhattan(t):
+    """Soma das distâncias de Manhattan peça-a-peça (ignora o 9)."""
+    dist = 0
+    for idx, val in enumerate(t):
+        if val == 9:
+            continue
+        i, j = divmod(idx, COLS)
+        gi, gj = GOAL_POS[val]
+        dist += abs(i - gi) + abs(j - gj)
+    return dist
+
+def pecas_erradas(t):
+    """Conta peças fora da posição objetivo (ignora o 9)."""
+    return sum(1 for i, val in enumerate(t) if val != 9 and val != _GOAL[i])
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Reconstrução do caminho}
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+def reconstruir_caminho(no):
+    """Caminho do nó inicial até o nó 'no' (inclusive)."""
+    caminho = []
+    while no:
+        caminho.append(no.tabuleiro)
+        no = no.pai
+    return list(reversed(caminho))
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Algoritmo de busca (UCS e \texorpdfstring{$A^*$}{A*})}
+
+A busca de Custo Uniforme (UCS) é um caso particular do $A^*$ com heurística nula ($h \equiv 0$). Em ambos, mantemos a \emph{fronteira} em uma fila de prioridade ordenada por $f(n) = g(n) + h(n)$ e um mapa \texttt{custo\_ate} para dominância. Estados visitados são marcados em \texttt{fechados}.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+import heapq
+
+def busca(tabuleiro_inicial, algoritmo="ucs", heuristica="manhattan",
+          limite_expansoes=None):
+    """Executa UCS ou A* e retorna um dicionário com métricas e resultado."""
+    t_inicial = tabuleiro_para_tupla(tabuleiro_inicial)
+    t_objetivo = objetivo_tupla()
+
+    if algoritmo not in ("ucs", "astar"):
+        raise ValueError("algoritmo deve ser 'ucs' ou 'astar'")
+
+    if algoritmo == "astar":
+        if   heuristica == "manhattan":     hfun = distancia_manhattan
+        elif heuristica == "pecas_erradas": hfun = pecas_erradas
+        else: raise ValueError("heuristica deve ser 'manhattan' ou 'pecas_erradas'")
+    else:
+        hfun = lambda _: 0  # UCS
+
+    fronteira = []
+    contador = 0
+    no_inicial = No(t_inicial, pai=None, custo=0)
+    heapq.heappush(fronteira, (hfun(t_inicial), contador, no_inicial))
+    contador += 1
+
+    custo_ate = {t_inicial: 0}
+    fechados = set()
+    expandidos = 0
+
+    while fronteira:
+        _, _, atual = heapq.heappop(fronteira)
+
+        if atual.tabuleiro == t_objetivo:
+            caminho = reconstruir_caminho(atual)
+            return {
+                "encontrado": True,
+                "movimentos": len(caminho) - 1,
+                "custo": atual.custo,
+                "caminho": caminho,
+                "tamanho_fechados": len(fechados),
+                "tamanho_fronteira": len(fronteira),
+                "expandidos": expandidos,
+                "algoritmo": algoritmo,
+                "heuristica": heuristica if algoritmo == "astar" else None
+            }
+
+        if atual.tabuleiro in fechados:
+            continue
+        fechados.add(atual.tabuleiro)
+
+        expandidos += 1
+        if limite_expansoes is not None and expandidos >= limite_expansoes:
+            return {
+                "encontrado": False,
+                "motivo": f"limite_expansoes={limite_expansoes} atingido",
+                "tamanho_fechados": len(fechados),
+                "tamanho_fronteira": len(fronteira),
+                "expandidos": expandidos,
+                "algoritmo": algoritmo,
+                "heuristica": heuristica if algoritmo == "astar" else None
+            }
+
+        for filho in atual.expandir():
+            g = filho.custo
+            if (filho.tabuleiro not in custo_ate) or (g < custo_ate[filho.tabuleiro]):
+                custo_ate[filho.tabuleiro] = g
+                f = g + hfun(filho.tabuleiro)
+                heapq.heappush(fronteira, (f, contador, filho))
+                contador += 1
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Impressão do caminho solução}
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+def mostrar_caminho_solucao(caminho):
+    """Imprime o caminho em formato 3x3 por passo."""
+    for passo, t in enumerate(caminho):
+        print(f"Passo {passo}:")
+        for r in range(LINHAS):
+            print(list(t[r*COLS:(r+1)*COLS]))
+        print()
+\end{minted}
+
+% ---------------------------------------------------------
+
+\section{Exemplo de execução e saída}
+
+O trecho a seguir embaralha uma instância solucionável e executa UCS e $A^*$ com Manhattan, reportando as métricas solicitadas.
+
+\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
+if __name__ == "__main__":
+    demo = tabuleiro_aleatorio_soluvel(movimentos_embaralhar=30, seed=39)
+    print("Tabuleiro inicial:")
+    desenhar_tabuleiro(demo)
+    print("\nSolucionável?", eh_soluvel(demo))
+
+    print("\n== UCS ==")
+    r1 = busca(demo, algoritmo="ucs")
+    print({k: v for k, v in r1.items() if k != "caminho"})
+
+    print("\n== A* (Manhattan) ==")
+    r2 = busca(demo, algoritmo="astar", heuristica="manhattan")
+    print({k: v for k, v in r2.items() if k != "caminho"})
+
+    if r2.get("encontrado"):
+        print("\nPrimeiros 5 passos (A*):")
+        mostrar_caminho_solucao(r2["caminho"][:5])
+\end{minted}

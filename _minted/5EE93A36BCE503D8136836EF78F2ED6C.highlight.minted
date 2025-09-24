@@ -1,0 +1,23 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{objetivo\PYGZus{}tupla}\PYG{p}{():}
+    \PYG{k}{return} \PYG{n}{tabuleiro\PYGZus{}para\PYGZus{}tupla}\PYG{p}{(}\PYG{n}{TABULEIRO\PYGZus{}OBJETIVO}\PYG{p}{)}
+
+\PYG{n}{\PYGZus{}GOAL} \PYG{o}{=} \PYG{n}{objetivo\PYGZus{}tupla}\PYG{p}{()}
+\PYG{c+c1}{\PYGZsh{} Mapa: valor \PYGZhy{}\PYGZgt{} (linha, coluna) no objetivo (ignora o 9)}
+\PYG{n}{GOAL\PYGZus{}POS} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{v}\PYG{p}{:} \PYG{n+nb}{divmod}\PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{COLS}\PYG{p}{)} \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{v} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{\PYGZus{}GOAL}\PYG{p}{)} \PYG{k}{if} \PYG{n}{v} \PYG{o}{!=} \PYG{l+m+mi}{9}\PYG{p}{\PYGZcb{}}
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{distancia\PYGZus{}manhattan}\PYG{p}{(}\PYG{n}{t}\PYG{p}{):}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Soma das distâncias de Manhattan peça\PYGZhy{}a\PYGZhy{}peça (ignora o 9).\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{dist} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{k}{for} \PYG{n}{idx}\PYG{p}{,} \PYG{n}{val} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{t}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{val} \PYG{o}{==} \PYG{l+m+mi}{9}\PYG{p}{:}
+            \PYG{k}{continue}
+        \PYG{n}{i}\PYG{p}{,} \PYG{n}{j} \PYG{o}{=} \PYG{n+nb}{divmod}\PYG{p}{(}\PYG{n}{idx}\PYG{p}{,} \PYG{n}{COLS}\PYG{p}{)}
+        \PYG{n}{gi}\PYG{p}{,} \PYG{n}{gj} \PYG{o}{=} \PYG{n}{GOAL\PYGZus{}POS}\PYG{p}{[}\PYG{n}{val}\PYG{p}{]}
+        \PYG{n}{dist} \PYG{o}{+=} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{n}{gi}\PYG{p}{)} \PYG{o}{+} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{j} \PYG{o}{\PYGZhy{}} \PYG{n}{gj}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{dist}
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{pecas\PYGZus{}erradas}\PYG{p}{(}\PYG{n}{t}\PYG{p}{):}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Conta peças fora da posição objetivo (ignora o 9).\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{val} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)} \PYG{k}{if} \PYG{n}{val} \PYG{o}{!=} \PYG{l+m+mi}{9} \PYG{o+ow}{and} \PYG{n}{val} \PYG{o}{!=} \PYG{n}{\PYGZus{}GOAL}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+\end{MintedVerbatim}

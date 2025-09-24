@@ -1,0 +1,28 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Ertel 2017]{ertel2017}
+\abntrefinfo{Ertel}{ERTEL}{2017}
+{ERTEL, W. \emph{Introduction to Artificial Intelligence}. 2. ed. Cham:
+  Springer, 2017.}
+
+\bibitem[Luger 2009]{luger2009artificial}
+\abntrefinfo{Luger}{LUGER}{2009}
+{LUGER, G.~F. \emph{Artificial Intelligence: Structures and Strategies for
+  Complex Problem Solving}. 6. ed. [S.l.]: Pearson, 2009.}
+
+\bibitem[Nilsson 1998]{nilsson1998}
+\abntrefinfo{Nilsson}{NILSSON}{1998}
+{NILSSON, N.~J. \emph{Artificial Intelligence: A New Synthesis}. San Francisco:
+  Morgan Kaufmann, 1998.}
+
+\bibitem[Russell e Norvig 2010]{russell2010artificial}
+\abntrefinfo{Russell e Norvig}{RUSSELL; NORVIG}{2010}
+{RUSSELL, S.~J.; NORVIG, P. \emph{Artificial Intelligence: A Modern Approach}.
+  3. ed. [S.l.]: Prentice Hall, 2010.}
+
+\end{thebibliography}

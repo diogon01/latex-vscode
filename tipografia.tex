@@ -1,0 +1,104 @@
+% ==============================
+% Tipografia / Estilo do documento
+% ==============================
+
+% Cores e tabelas coloridas (necessário para \rowcolor e \textcolor)
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{colortbl}
+
+% Títulos (cap/section)
+\usepackage[explicit]{titlesec}
+
+% Sumário estilizado (sem KOMA/tocbasic para evitar conflito)
+\usepackage[dotinlabels]{titletoc}
+
+% --------- Cores de conveniência ----------
+\newcommand{\cor}{black}              % cor “tema”
+\newcommand{\cTT}{\rowcolor{\cor!10}} % header de tabela
+\newcommand{\cLT}{\rowcolor{\cor!5}}  % linha de destaque
+
+% --------- Marcadores quadrados ----------
+\newcommand\MySquare{%
+  \leavevmode\hbox to 1.2ex{\hss\vrule height .9ex width .7ex depth -.2ex\hss}}
+\newcommand\MySecSquare{%
+  \leavevmode\hbox to 1.2ex{\hss\vrule height 1.3ex width 1.1ex depth -.2ex\hss}}
+\renewcommand\labelitemi{\MySquare}
+
+% --------- Formatação de CAPÍTULO ----------
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\bfseries\LARGE\color{black}}
+  {\renewcommand{\thechapter}{\arabic{chapter}}\hspace*{0.5em}%
+   \colorbox{black}{\parbox[c][1.2cm][c]{1cm}{\centering\textcolor{white}{\Huge\thechapter}}}}
+  {-0.5ex}
+  {\titlerule\vspace{.7ex}\filleft\MakeUppercase{#1}}
+  [\vspace{.2ex}\titlerule]
+
+\titlespacing*{\chapter}{0pt}{48pt}{72pt}
+
+% --------- Formatação de SECTION/SUBSECTION ----------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{black}}
+  {\MySecSquare\ \thesection}{1em}{#1}
+\titleformat{name=\section,numberless}
+  {\normalfont\Large\bfseries\color{black}}
+  {\MySecSquare}{1em}{#1}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{black}}
+  {\MySecSquare\ \thesubsection}{1em}{#1}
+\titleformat{name=\subsection,numberless}
+  {\normalfont\large\bfseries\color{black}}
+  {\MySecSquare}{1em}{#1}
+
+% --------- Sumário (ToC) ----------
+\titlecontents{chapter}
+  [3.8em]{}
+  {\sffamily\bfseries\contentslabel{3.1em}}
+  {}
+  {\titlerule*[1pc]{.}\sffamily\bfseries\contentspage}
+
+\titlecontents{section}
+  [3.8em]{}
+  {\sffamily\bfseries\contentslabel{3.1em}}
+  {}
+  {\titlerule*[1pc]{.}\sffamily\bfseries\contentspage}
+
+\titlecontents{subsection}
+  [3.8em]{}
+  {\sffamily\contentslabel{3.45em}}
+  {}
+  {\titlerule*[1pc]{.}\sffamily\contentspage}
+
+% ==============================
+% Cabeçalho / Rodapé (ABNT-like)
+% ==============================
+\usepackage{fancyhdr}
+\setlength{\headheight}{14pt} % evita warning de headheight
+\fancyhf{}                    % limpa
+% número no canto superior externo; título no interno
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\small\rightmark} % páginas ímpares: seção
+\fancyhead[RE]{\small\leftmark}  % páginas pares: capítulo
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+
+% ==============================
+% Legendas (captions)
+% ==============================
+\usepackage{caption}
+% Estilo global (aplica a figura e tabela)
+\captionsetup{
+  font=small,
+  labelfont={bf,color=\cor},
+  labelsep=colon,
+  justification=raggedright,
+  singlelinecheck=false
+}
+% Se quiser por-tipo (descomente e comente o bloco global acima)
+% \captionsetup[figure]{font=small, labelfont={bf,color=\cor}, labelsep=colon}
+% \captionsetup[table]{ font=small, labelfont={bf,color=\cor}, labelsep=colon}
+
+% Português nos rótulos
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabela}

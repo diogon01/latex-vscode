@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{mostrar\PYGZus{}caminho\PYGZus{}solucao}\PYG{p}{(}\PYG{n}{caminho}\PYG{p}{):}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Imprime o caminho em formato 3x3 por passo.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{for} \PYG{n}{passo}\PYG{p}{,} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{caminho}\PYG{p}{):}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}Passo }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{passo}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{:\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{r} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{LINHAS}\PYG{p}{):}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{t}\PYG{p}{[}\PYG{n}{r}\PYG{o}{*}\PYG{n}{COLS}\PYG{p}{:(}\PYG{n}{r}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{*}\PYG{n}{COLS}\PYG{p}{]))}
+        \PYG{n+nb}{print}\PYG{p}{()}
+\end{MintedVerbatim}

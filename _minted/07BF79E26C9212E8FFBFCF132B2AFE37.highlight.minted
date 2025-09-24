@@ -1,0 +1,70 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{heapq}
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{busca}\PYG{p}{(}\PYG{n}{tabuleiro\PYGZus{}inicial}\PYG{p}{,} \PYG{n}{algoritmo}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}ucs\PYGZdq{}}\PYG{p}{,} \PYG{n}{heuristica}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}manhattan\PYGZdq{}}\PYG{p}{,}
+          \PYG{n}{limite\PYGZus{}expansoes}\PYG{o}{=}\PYG{k+kc}{None}\PYG{p}{):}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Executa UCS ou A* e retorna um dicionário com métricas e resultado.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{t\PYGZus{}inicial} \PYG{o}{=} \PYG{n}{tabuleiro\PYGZus{}para\PYGZus{}tupla}\PYG{p}{(}\PYG{n}{tabuleiro\PYGZus{}inicial}\PYG{p}{)}
+    \PYG{n}{t\PYGZus{}objetivo} \PYG{o}{=} \PYG{n}{objetivo\PYGZus{}tupla}\PYG{p}{()}
+
+    \PYG{k}{if} \PYG{n}{algoritmo} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ucs\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}astar\PYGZdq{}}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}algoritmo deve ser \PYGZsq{}ucs\PYGZsq{} ou \PYGZsq{}astar\PYGZsq{}\PYGZdq{}}\PYG{p}{)}
+
+    \PYG{k}{if} \PYG{n}{algoritmo} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}astar\PYGZdq{}}\PYG{p}{:}
+        \PYG{k}{if}   \PYG{n}{heuristica} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}manhattan\PYGZdq{}}\PYG{p}{:}     \PYG{n}{hfun} \PYG{o}{=} \PYG{n}{distancia\PYGZus{}manhattan}
+        \PYG{k}{elif} \PYG{n}{heuristica} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}pecas\PYGZus{}erradas\PYGZdq{}}\PYG{p}{:} \PYG{n}{hfun} \PYG{o}{=} \PYG{n}{pecas\PYGZus{}erradas}
+        \PYG{k}{else}\PYG{p}{:} \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}heuristica deve ser \PYGZsq{}manhattan\PYGZsq{} ou \PYGZsq{}pecas\PYGZus{}erradas\PYGZsq{}\PYGZdq{}}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{hfun} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{\PYGZus{}}\PYG{p}{:} \PYG{l+m+mi}{0}  \PYG{c+c1}{\PYGZsh{} UCS}
+
+    \PYG{n}{fronteira} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{contador} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{no\PYGZus{}inicial} \PYG{o}{=} \PYG{n}{No}\PYG{p}{(}\PYG{n}{t\PYGZus{}inicial}\PYG{p}{,} \PYG{n}{pai}\PYG{o}{=}\PYG{k+kc}{None}\PYG{p}{,} \PYG{n}{custo}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n}{heapq}\PYG{o}{.}\PYG{n}{heappush}\PYG{p}{(}\PYG{n}{fronteira}\PYG{p}{,} \PYG{p}{(}\PYG{n}{hfun}\PYG{p}{(}\PYG{n}{t\PYGZus{}inicial}\PYG{p}{),} \PYG{n}{contador}\PYG{p}{,} \PYG{n}{no\PYGZus{}inicial}\PYG{p}{))}
+    \PYG{n}{contador} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+    \PYG{n}{custo\PYGZus{}ate} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{t\PYGZus{}inicial}\PYG{p}{:} \PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{}}
+    \PYG{n}{fechados} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+    \PYG{n}{expandidos} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+    \PYG{k}{while} \PYG{n}{fronteira}\PYG{p}{:}
+        \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{atual} \PYG{o}{=} \PYG{n}{heapq}\PYG{o}{.}\PYG{n}{heappop}\PYG{p}{(}\PYG{n}{fronteira}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n}{atual}\PYG{o}{.}\PYG{n}{tabuleiro} \PYG{o}{==} \PYG{n}{t\PYGZus{}objetivo}\PYG{p}{:}
+            \PYG{n}{caminho} \PYG{o}{=} \PYG{n}{reconstruir\PYGZus{}caminho}\PYG{p}{(}\PYG{n}{atual}\PYG{p}{)}
+            \PYG{k}{return} \PYG{p}{\PYGZob{}}
+                \PYG{l+s+s2}{\PYGZdq{}encontrado\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{True}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}movimentos\PYGZdq{}}\PYG{p}{:} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{caminho}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}custo\PYGZdq{}}\PYG{p}{:} \PYG{n}{atual}\PYG{o}{.}\PYG{n}{custo}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}caminho\PYGZdq{}}\PYG{p}{:} \PYG{n}{caminho}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}tamanho\PYGZus{}fechados\PYGZdq{}}\PYG{p}{:} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{fechados}\PYG{p}{),}
+                \PYG{l+s+s2}{\PYGZdq{}tamanho\PYGZus{}fronteira\PYGZdq{}}\PYG{p}{:} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{fronteira}\PYG{p}{),}
+                \PYG{l+s+s2}{\PYGZdq{}expandidos\PYGZdq{}}\PYG{p}{:} \PYG{n}{expandidos}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}algoritmo\PYGZdq{}}\PYG{p}{:} \PYG{n}{algoritmo}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}heuristica\PYGZdq{}}\PYG{p}{:} \PYG{n}{heuristica} \PYG{k}{if} \PYG{n}{algoritmo} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}astar\PYGZdq{}} \PYG{k}{else} \PYG{k+kc}{None}
+            \PYG{p}{\PYGZcb{}}
+
+        \PYG{k}{if} \PYG{n}{atual}\PYG{o}{.}\PYG{n}{tabuleiro} \PYG{o+ow}{in} \PYG{n}{fechados}\PYG{p}{:}
+            \PYG{k}{continue}
+        \PYG{n}{fechados}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{atual}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{)}
+
+        \PYG{n}{expandidos} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{k}{if} \PYG{n}{limite\PYGZus{}expansoes} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None} \PYG{o+ow}{and} \PYG{n}{expandidos} \PYG{o}{\PYGZgt{}=} \PYG{n}{limite\PYGZus{}expansoes}\PYG{p}{:}
+            \PYG{k}{return} \PYG{p}{\PYGZob{}}
+                \PYG{l+s+s2}{\PYGZdq{}encontrado\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{False}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}motivo\PYGZdq{}}\PYG{p}{:} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}limite\PYGZus{}expansoes=}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{limite\PYGZus{}expansoes}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ atingido\PYGZdq{}}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}tamanho\PYGZus{}fechados\PYGZdq{}}\PYG{p}{:} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{fechados}\PYG{p}{),}
+                \PYG{l+s+s2}{\PYGZdq{}tamanho\PYGZus{}fronteira\PYGZdq{}}\PYG{p}{:} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{fronteira}\PYG{p}{),}
+                \PYG{l+s+s2}{\PYGZdq{}expandidos\PYGZdq{}}\PYG{p}{:} \PYG{n}{expandidos}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}algoritmo\PYGZdq{}}\PYG{p}{:} \PYG{n}{algoritmo}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}heuristica\PYGZdq{}}\PYG{p}{:} \PYG{n}{heuristica} \PYG{k}{if} \PYG{n}{algoritmo} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}astar\PYGZdq{}} \PYG{k}{else} \PYG{k+kc}{None}
+            \PYG{p}{\PYGZcb{}}
+
+        \PYG{k}{for} \PYG{n}{filho} \PYG{o+ow}{in} \PYG{n}{atual}\PYG{o}{.}\PYG{n}{expandir}\PYG{p}{():}
+            \PYG{n}{g} \PYG{o}{=} \PYG{n}{filho}\PYG{o}{.}\PYG{n}{custo}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{custo\PYGZus{}ate}\PYG{p}{)} \PYG{o+ow}{or} \PYG{p}{(}\PYG{n}{g} \PYG{o}{\PYGZlt{}} \PYG{n}{custo\PYGZus{}ate}\PYG{p}{[}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{]):}
+                \PYG{n}{custo\PYGZus{}ate}\PYG{p}{[}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{]} \PYG{o}{=} \PYG{n}{g}
+                \PYG{n}{f} \PYG{o}{=} \PYG{n}{g} \PYG{o}{+} \PYG{n}{hfun}\PYG{p}{(}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{)}
+                \PYG{n}{heapq}\PYG{o}{.}\PYG{n}{heappush}\PYG{p}{(}\PYG{n}{fronteira}\PYG{p}{,} \PYG{p}{(}\PYG{n}{f}\PYG{p}{,} \PYG{n}{contador}\PYG{p}{,} \PYG{n}{filho}\PYG{p}{))}
+                \PYG{n}{contador} \PYG{o}{+=} \PYG{l+m+mi}{1}
+\end{MintedVerbatim}
