@@ -12,12 +12,22 @@ quais estruturas de dados utilizam e de que modo heurísticas afetam o desempenh
 
 Para fins experimentais, optou-se pelo \emph{8-puzzle} apenas como domínio de teste. Trata-se de um tabuleiro 
 $3\times 3$ com oito peças móveis e um espaço vazio, no qual o objetivo é atingir uma configuração final a partir 
-de um arranjo inicial. A escolha desse problema não se deve à sua complexidade prática, mas sim ao fato de ser 
+de um arranjo inicial (Figura~\ref{fig:8puzzle}). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagens/8puzzle7.png}
+    \caption{Exemplo de estados do problema do 8-puzzle, com estado inicial, transições e estado objetivo.}
+    \caption*{\textit{Fonte: elaborado pelos autores.}}
+    \label{fig:8puzzle}
+\end{figure}
+
+
+A escolha desse problema não se deve à sua complexidade prática, mas sim ao fato de ser 
 computacionalmente leve, permitindo implementar e comparar variações de algoritmos de busca de forma controlada e 
 reprodutível. Assim, o foco da análise permanece nos métodos de busca --- custo uniforme e versões do algoritmo $A^*$ 
 com heurísticas de diferentes níveis de admissibilidade --- e não no quebra-cabeça em si. Nesse sentido, o 8-puzzle 
 funciona como um \emph{laboratório didático} que viabiliza a avaliação sistemática de desempenho.
-
 
 No contexto da disciplina INE5633---\emph{Sistemas Inteligentes} (UFSC), esta Atividade Prática 1 (AP1) utiliza o 8-puzzle como laboratório para implementar e analisar o algoritmo A* e variações, em alinhamento ao conteúdo de \emph{raciocínio e resolução de problemas} e à ênfase em técnicas de procura e informação heurística; a proposta didática privilegia implementação e análise prática, em consonância com a bibliografia básica adotada \cite{russell2010artificial,luger2009artificial}.
 
