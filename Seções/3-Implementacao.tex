@@ -1,0 +1,289 @@
+% =========================================================  
+% Capítulo 3 — Implementação e Experimentos  
+% =========================================================  
+  
+\section{Introdução}  
+  
+Este capítulo apresenta a implementação prática dos métodos de busca discutidos nos Capítulos~1 e~2, aplicada ao problema do 8-puzzle. O objetivo é demonstrar como os conceitos teóricos — modelagem do espaço de estados, operadores, heurísticas, algoritmos UCS e $A^*$ — são traduzidos em código e, posteriormente, avaliar seu desempenho em instâncias reais do problema.  
+  
+\section{Modelagem Computacional do 8-puzzle}  
+  
+Baseando-se na modelagem formal apresentada na Seção~2.1, o estado do tabuleiro é representado por uma tupla de nove inteiros, que permite hashing eficiente e comparação rápida entre estados. Foram desenvolvidas funções utilitárias para conversão entre representações matriciais e lineares, além de um método para exibição do tabuleiro no terminal.  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+LINHAS, COLS = 3, 3  
+TABULEIRO_OBJETIVO = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]  # 9 representa o espaço em branco  
+  
+def tabuleiro_para_tupla(tabuleiro):  
+    """Converte o tabuleiro (lista de listas) em uma tupla para facilitar comparação e hashing."""  
+    return tuple(tabuleiro[i][j] for i in range(LINHAS) for j in range(COLS))  
+  
+def tupla_para_tabuleiro(t):  
+    """Converte uma tupla em formato tabuleiro (lista de listas)."""  
+    return [list(t[i*COLS:(i+1)*COLS]) for i in range(LINHAS)]  
+  
+def desenhar_tabuleiro(tabuleiro):  
+    """Imprime o tabuleiro de forma legível."""  
+    for linha in tabuleiro:  
+        print(linha)  
+\end{minted}  
+  
+\section{Verificação de Solubilidade}  
+  
+Conforme discutido no Capítulo~2, nem todas as configurações do 8-puzzle são solucionáveis. A função abaixo implementa a verificação baseada na contagem de inversões:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+def contagem_inversoes(tabuleiro):  
+    """Conta o número de inversões para verificar se o tabuleiro é solucionável."""  
+    flat = [x for row in tabuleiro for x in row if x != 9]  
+    inv = 0  
+    for i in range(len(flat)):  
+        for j in range(i+1, len(flat)):  
+            if flat[i] > flat[j]:  
+                inv += 1  
+    return inv  
+  
+def eh_soluvel(tabuleiro):  
+    """Retorna True se o tabuleiro é solucionável."""  
+    return contagem_inversoes(tabuleiro) % 2 == 0  
+\end{minted}  
+  
+\section{Geração de Instâncias Aleatórias Solucionáveis}  
+  
+A geração de instâncias solucionáveis parte do estado objetivo, realizando movimentos aleatórios válidos do espaço vazio:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+import random  
+  
+def tabuleiro_aleatorio_soluvel(movimentos_embaralhar=40, seed=None):  
+    """Gera um tabuleiro aleatório solucionável a partir do objetivo."""  
+    if seed is not None:  
+        random.seed(seed)  
+    tabuleiro = [linha[:] for linha in TABULEIRO_OBJETIVO]  
+    t = tabuleiro_para_tupla(tabuleiro)  
+    def pos_branco(t):  
+        idx = t.index(9)  
+        return divmod(idx, COLS)  
+    for _ in range(movimentos_embaralhar):  
+        i, j = pos_branco(t)  
+        movimentos = []  
+        if i > 0: movimentos.append((-1, 0))  
+        if i < LINHAS-1: movimentos.append((1, 0))  
+        if j > 0: movimentos.append((0, -1))  
+        if j < COLS-1: movimentos.append((0, 1))  
+        di, dj = random.choice(movimentos)  
+        ni, nj = i + di, j + dj  
+        lst = list(t)  
+        idx1, idx2 = i*COLS + j, ni*COLS + nj  
+        lst[idx1], lst[idx2] = lst[idx2], lst[idx1]  
+        t = tuple(lst)  
+    return tupla_para_tabuleiro(t)  
+\end{minted}  
+  
+\section{Estruturas de Dados e Expansão de Nós}  
+  
+Cada nó do espaço de estados é representado por uma classe, contendo o estado do tabuleiro, referência ao nó pai e o custo acumulado. O método \texttt{expandir} gera todos os estados filhos possíveis:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+from dataclasses import dataclass  
+  
+@dataclass  
+class No:  
+    tabuleiro: tuple  
+    pai: object = None  
+    custo: int = 0  
+  
+    def pos_branco(self):  
+        idx = self.tabuleiro.index(9)  
+        return divmod(idx, COLS)  
+  
+    def expandir(self):  
+        i, j = self.pos_branco()  
+        movimentos = [(-1,0),(1,0),(0,-1),(0,1)]  
+        filhos = []  
+        for di, dj in movimentos:  
+            ni, nj = i + di, j + dj  
+            if 0 <= ni < LINHAS and 0 <= nj < COLS:  
+                nova_lista = list(self.tabuleiro)  
+                idx1 = i*COLS + j  
+                idx2 = ni*COLS + nj  
+                nova_lista[idx1], nova_lista[idx2] = nova_lista[idx2], nova_lista[idx1]  
+                filhos.append(No(tuple(nova_lista), pai=self, custo=self.custo + 1))  
+        return filhos  
+\end{minted}  
+  
+\section{Implementação das Heurísticas}  
+  
+As heurísticas admissíveis utilizadas são:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+def objetivo_tupla():  
+    return tabuleiro_para_tupla(TABULEIRO_OBJETIVO)  
+  
+def distancia_manhattan(t):  
+    """Heurística admissível clássica."""  
+    dist = 0  
+    for val in t:  
+        if val == 9:  
+            continue  
+        idx = t.index(val)  
+        i, j = divmod(idx, COLS)  
+        gi, gj = divmod(val-1, COLS)  
+        dist += abs(i-gi) + abs(j-gj)  
+    return dist  
+  
+def pecas_erradas(t):  
+    """Heurística admissível simples: número de peças fora do lugar."""  
+    g = objetivo_tupla()  
+    return sum(1 for i in range(len(t)) if t[i] != 9 and t[i] != g[i])  
+\end{minted}  
+  
+\section{Algoritmos de Busca}  
+  
+A seguir, apresenta-se a função principal que implementa tanto UCS quanto $A^*$, conforme o parâmetro de entrada:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+import heapq  
+  
+def busca(tabuleiro_inicial, algoritmo="ucs", heuristica="manhattan", limite_expansoes=None):  
+    """Executa UCS ou A* dependendo dos parâmetros."""  
+    t_inicial = tabuleiro_para_tupla(tabuleiro_inicial)  
+    t_objetivo = objetivo_tupla()  
+    if algoritmo not in ("ucs", "astar"):  
+        raise ValueError("algoritmo deve ser 'ucs' ou 'astar'")  
+    if algoritmo == "astar":  
+        if heuristica == "manhattan":  
+            hfun = distancia_manhattan  
+        elif heuristica == "pecas_erradas":  
+            hfun = pecas_erradas  
+        else:  
+            raise ValueError("heuristica deve ser 'manhattan' ou 'pecas_erradas'")  
+    else:  
+        hfun = lambda _: 0  
+    fronteira = []  
+    contador = 0  
+    no_inicial = No(t_inicial, pai=None, custo=0)  
+    heapq.heappush(fronteira, (hfun(t_inicial), contador, no_inicial))  
+    contador += 1  
+    custo_ate = {t_inicial: 0}  
+    fechados = {}  
+    expandidos = 0  
+    while fronteira:  
+        _, _, atual = heapq.heappop(fronteira)  
+        if atual.tabuleiro == t_objetivo:  
+            caminho = reconstruir_caminho(atual)  
+            return {  
+                "encontrado": True,  
+                "movimentos": len(caminho)-1,  
+                "custo": atual.custo,  
+                "caminho": caminho,  
+                "tamanho_fechados": len(fechados),  
+                "tamanho_fronteira": len(fronteira),  
+                "expandidos": expandidos,  
+                "algoritmo": algoritmo,  
+                "heuristica": heuristica if algoritmo == "astar" else None  
+            }  
+        if atual.tabuleiro in fechados:  
+            continue  
+        fechados[atual.tabuleiro] = True  
+        expandidos += 1  
+        if limite_expansoes is not None and expandidos >= limite_expansoes:  
+            return {  
+                "encontrado": False,  
+                "motivo": f"limite_expansoes={limite_expansoes} atingido",  
+                "tamanho_fechados": len(fechados),  
+                "tamanho_fronteira": len(fronteira),  
+                "expandidos": expandidos,  
+                "algoritmo": algoritmo,  
+                "heuristica": heuristica if algoritmo == "astar" else None  
+            }  
+        for filho in atual.expandir():  
+            g = filho.custo  
+            if (filho.tabuleiro not in custo_ate) or (g < custo_ate[filho.tabuleiro]):  
+                custo_ate[filho.tabuleiro] = g  
+                f = g + hfun(filho.tabuleiro)  
+                heapq.heappush(fronteira, (f, contador, filho))  
+                contador += 1  
+\end{minted}  
+  
+\section{Reconstrução do Caminho}  
+  
+Após encontrar o objetivo, o caminho-solução é reconstruído:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+def reconstruir_caminho(no):  
+    """Reconstrói o caminho da solução a partir do nó final."""  
+    caminho = []  
+    while no:  
+        caminho.append(no.tabuleiro)  
+        no = no.pai  
+    return list(reversed(caminho))  
+\end{minted}  
+  
+\section{Experimentos e Resultados}  
+  
+Para avaliar o desempenho dos algoritmos, foram geradas instâncias aleatórias solucionáveis do 8-puzzle. Para cada instância, executou-se UCS e $A^*$ com ambas as heurísticas. As principais métricas coletadas incluem número de nós expandidos, comprimento da solução e tamanho da fronteira.  
+  
+\subsection{Exemplo de Execução}  
+  
+Abaixo, apresenta-se um exemplo de execução com uma instância gerada aleatoriamente (embaralhamento de 30 movimentos, semente 39):  
+  
+\begin{verbatim}  
+Tabuleiro inicial:  
+[1, 2, 3]  
+[7, 4, 6]  
+[9, 5, 8]  
+  
+Solucionável? True  
+  
+== UCS ==  
+{'encontrado': True, 'movimentos': 4, 'custo': 4, 'tamanho_fechados': 20,  
+ 'tamanho_fronteira': 17, 'expandidos': 20, 'algoritmo': 'ucs', 'heuristica': None}  
+  
+== A* (Manhattan) ==  
+{'encontrado': True, 'movimentos': 4, 'custo': 4, 'tamanho_fechados': 4,  
+ 'tamanho_fronteira': 5, 'expandidos': 4, 'algoritmo': 'astar', 'heuristica': 'manhattan'}  
+  
+Primeiros 5 passos (A*):  
+Passo 0:  
+[1, 2, 3]  
+[7, 4, 6]  
+[9, 5, 8]  
+  
+Passo 1:  
+[1, 2, 3]  
+[9, 4, 6]  
+[7, 5, 8]  
+  
+Passo 2:  
+[1, 2, 3]  
+[4, 9, 6]  
+[7, 5, 8]  
+  
+Passo 3:  
+[1, 2, 3]  
+[4, 5, 6]  
+[7, 9, 8]  
+  
+Passo 4:  
+[1, 2, 3]  
+[4, 5, 6]  
+[7, 8, 9]  
+\end{verbatim}  
+  
+\subsection{Análise dos Resultados}  
+  
+Os resultados confirmam a teoria apresentada no Capítulo~2:  
+\begin{itemize}  
+    \item O $A^*$ com heurística de Manhattan expande significativamente menos nós que o UCS.  
+    \item O comprimento da solução e o custo total coincidem, confirmando a admissibilidade das heurísticas.  
+    \item O tamanho máximo da fronteira e o número de nós visitados são drasticamente reduzidos em $A^*$.  
+\end{itemize}  
+  
+\section{Considerações Finais}  
+  
+A implementação prática dos algoritmos evidencia a importância de uma modelagem eficiente do espaço de estados e da escolha apropriada de heurísticas. Os experimentos demonstram que heurísticas admissíveis e consistentes, como a distância de Manhattan, proporcionam ganhos substanciais de eficiência sem comprometer a qualidade da solução.  
+  
+O código-fonte integral encontra-se no Apêndice~A.  
+  
+% ---------------------------------------------------------  

@@ -1,6 +1,6 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
 \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{reconstruir\PYGZus{}caminho}\PYG{p}{(}\PYG{n}{no}\PYG{p}{):}
-\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Caminho do nó inicial até o nó \PYGZsq{}no\PYGZsq{} (inclusive).\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Reconstrói o caminho da solução a partir do nó final.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
     \PYG{n}{caminho} \PYG{o}{=} \PYG{p}{[]}
     \PYG{k}{while} \PYG{n}{no}\PYG{p}{:}
         \PYG{n}{caminho}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{no}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{)}

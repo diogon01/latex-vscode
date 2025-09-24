@@ -1,12 +1,5 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{dataclasses}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{dataclass}\PYG{p}{,} \PYG{n}{field}
-
-\PYG{n+nd}{@dataclass}\PYG{p}{(}\PYG{n}{order}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{NoPriorizado}\PYG{p}{:}
-\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Pacote (f, tie\PYGZhy{}breaker, nó) para a fila de prioridade.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
-    \PYG{n}{prioridade}\PYG{p}{:} \PYG{n+nb}{int}
-    \PYG{n}{contador}\PYG{p}{:} \PYG{n+nb}{int}
-    \PYG{n}{no}\PYG{p}{:} \PYG{n+nb}{object} \PYG{o}{=} \PYG{n}{field}\PYG{p}{(}\PYG{n}{compare}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{dataclasses}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{dataclass}
 
 \PYG{n+nd}{@dataclass}
 \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{No}\PYG{p}{:}
@@ -20,7 +13,7 @@
 
     \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{expandir}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
         \PYG{n}{i}\PYG{p}{,} \PYG{n}{j} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{pos\PYGZus{}branco}\PYG{p}{()}
-        \PYG{n}{movimentos} \PYG{o}{=} \PYG{p}{[(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{),} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{),} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)]}
+        \PYG{n}{movimentos} \PYG{o}{=} \PYG{p}{[(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{),(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{),(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{),(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)]}
         \PYG{n}{filhos} \PYG{o}{=} \PYG{p}{[]}
         \PYG{k}{for} \PYG{n}{di}\PYG{p}{,} \PYG{n}{dj} \PYG{o+ow}{in} \PYG{n}{movimentos}\PYG{p}{:}
             \PYG{n}{ni}\PYG{p}{,} \PYG{n}{nj} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{n}{di}\PYG{p}{,} \PYG{n}{j} \PYG{o}{+} \PYG{n}{dj}

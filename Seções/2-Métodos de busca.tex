@@ -1,306 +1,115 @@
-% =========================================================
-% Capítulo 2 — Métodos de Busca
-% (este arquivo é incluído pelo main.tex dentro de \chapter)
-% =========================================================
-
-\section{Definição e utilitários do tabuleiro}
-
-O \emph{8-puzzle} é representado por uma matriz $3\times 3$ cujas peças numeradas ocupam oito posições e um espaço vazio ocupa a nona. Usaremos o valor \textbf{9} para representar esse espaço. Para facilitar comparações e hashing em estruturas de dados (e.g., dicionários e conjuntos), convertemos a representação matricial em tupla linear e vice-versa.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-# Dimensões e estado objetivo (9 = espaço vazio)
-LINHAS, COLS = 3, 3
-TABULEIRO_OBJETIVO = [[1, 2, 3],
-                       [4, 5, 6],
-                       [7, 8, 9]]
-
-def tabuleiro_para_tupla(tabuleiro):
-    """Converte lista de listas (3x3) em tupla linear de tamanho 9."""
-    return tuple(tabuleiro[i][j] for i in range(LINHAS) for j in range(COLS))
-
-def tupla_para_tabuleiro(t):
-    """Converte tupla linear (9) em lista de listas (3x3)."""
-    return [list(t[i*COLS:(i+1)*COLS]) for i in range(LINHAS)]
-
-def desenhar_tabuleiro(tabuleiro):
-    """Imprime o tabuleiro linha a linha (útil para depuração)."""
-    for linha in tabuleiro:
-        print(linha)
-\end{minted}
-
-\noindent
-Com isso, qualquer estado é uma tupla de nove inteiros, o que simplifica:
-\begin{itemize}[leftmargin=*,itemsep=0pt]
-  \item \emph{hashing} (armazenamento em \texttt{set}/\texttt{dict} para checagem de visitados);
-  \item comparação por igualdade (detecção de estados repetidos);
-  \item custo de cópia (tuplas são imutáveis e leves).
-\end{itemize}
-
-% ---------------------------------------------------------
-
-\section{Funções de solubilidade}
-
-Nem toda permutação de peças é solucionável. Para o tabuleiro $3\times 3$, uma configuração é solucionável se e somente se o número de \emph{inversões} (pares fora de ordem, ignorando o vazio) é \textbf{par}. A seguir, implementamos a contagem de inversões e o teste de solubilidade.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-def contagem_inversoes(tabuleiro):
-    """Conta inversões (pares fora de ordem) ignorando o 9."""
-    flat = [x for row in tabuleiro for x in row if x != 9]
-    inv = 0
-    for i in range(len(flat)):
-        for j in range(i + 1, len(flat)):
-            if flat[i] > flat[j]:
-                inv += 1
-    return inv
-
-def eh_soluvel(tabuleiro):
-    """Retorna True se o número de inversões é par (caso 3x3)."""
-    return contagem_inversoes(tabuleiro) % 2 == 0
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Gerador de tabuleiros aleatórios solucionáveis}
-
-Para gerar instâncias \emph{seguramente solucionáveis}, partimos do objetivo e aplicamos uma sequência de movimentos válidos do espaço vazio. Assim, a solubilidade é preservada.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-import random
-
-def tabuleiro_aleatorio_soluvel(movimentos_embaralhar=40, seed=None):
-    """Gera um tabuleiro aleatório solucionável a partir do objetivo."""
-    if seed is not None:
-        random.seed(seed)
-
-    tabuleiro = [linha[:] for linha in TABULEIRO_OBJETIVO]
-    t = tabuleiro_para_tupla(tabuleiro)
-
-    def pos_branco(t):
-        """Retorna (i, j) do espaço vazio (valor 9) em t."""
-        idx = t.index(9)
-        return divmod(idx, COLS)
-
-    for _ in range(movimentos_embaralhar):
-        i, j = pos_branco(t)
-        movimentos = []
-        if i > 0:           movimentos.append((-1, 0))
-        if i < LINHAS - 1:  movimentos.append(( 1, 0))
-        if j > 0:           movimentos.append(( 0,-1))
-        if j < COLS - 1:    movimentos.append(( 0, 1))
-        di, dj = random.choice(movimentos)
-        ni, nj = i + di, j + dj
-
-        lst = list(t)
-        idx1, idx2 = i*COLS + j, ni*COLS + nj
-        lst[idx1], lst[idx2] = lst[idx2], lst[idx1]
-        t = tuple(lst)
-
-    return tupla_para_tabuleiro(t)
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Definição das estruturas de dados (nó)}
-
-Utilizamos uma classe \texttt{No} para encapsular: estado (tupla), ponteiro para o pai (para reconstrução de solução) e custo acumulado. O método \texttt{expandir} gera sucessores ao mover o vazio nas quatro direções válidas.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-from dataclasses import dataclass, field
-
-@dataclass(order=True)
-class NoPriorizado:
-    """Pacote (f, tie-breaker, nó) para a fila de prioridade."""
-    prioridade: int
-    contador: int
-    no: object = field(compare=False)
-
-@dataclass
-class No:
-    tabuleiro: tuple
-    pai: object = None
-    custo: int = 0
-
-    def pos_branco(self):
-        idx = self.tabuleiro.index(9)
-        return divmod(idx, COLS)
-
-    def expandir(self):
-        i, j = self.pos_branco()
-        movimentos = [(-1,0), (1,0), (0,-1), (0,1)]
-        filhos = []
-        for di, dj in movimentos:
-            ni, nj = i + di, j + dj
-            if 0 <= ni < LINHAS and 0 <= nj < COLS:
-                nova_lista = list(self.tabuleiro)
-                idx1 = i*COLS + j
-                idx2 = ni*COLS + nj
-                nova_lista[idx1], nova_lista[idx2] = nova_lista[idx2], nova_lista[idx1]
-                filhos.append(No(tuple(nova_lista), pai=self, custo=self.custo + 1))
-        return filhos
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Heurísticas}
-
-Para o $A^*$, consideramos duas heurísticas clássicas admissíveis:
-\begin{enumerate}[label=(\alph*),leftmargin=*,itemsep=0pt,topsep=2pt]
-  \item \textbf{Peças fora do lugar} (\emph{misplaced tiles}): número de peças que não estão em sua posição objetivo;
-  \item \textbf{Distância de Manhattan}: soma, para cada peça, das distâncias de Manhattan entre a posição atual e a posição objetivo.
-\end{enumerate}
-A seguir, implementações em tempo linear no tamanho do estado.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-def objetivo_tupla():
-    return tabuleiro_para_tupla(TABULEIRO_OBJETIVO)
-
-_GOAL = objetivo_tupla()
-# Mapa: valor -> (linha, coluna) no objetivo (ignora o 9)
-GOAL_POS = {v: divmod(i, COLS) for i, v in enumerate(_GOAL) if v != 9}
-
-def distancia_manhattan(t):
-    """Soma das distâncias de Manhattan peça-a-peça (ignora o 9)."""
-    dist = 0
-    for idx, val in enumerate(t):
-        if val == 9:
-            continue
-        i, j = divmod(idx, COLS)
-        gi, gj = GOAL_POS[val]
-        dist += abs(i - gi) + abs(j - gj)
-    return dist
-
-def pecas_erradas(t):
-    """Conta peças fora da posição objetivo (ignora o 9)."""
-    return sum(1 for i, val in enumerate(t) if val != 9 and val != _GOAL[i])
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Reconstrução do caminho}
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-def reconstruir_caminho(no):
-    """Caminho do nó inicial até o nó 'no' (inclusive)."""
-    caminho = []
-    while no:
-        caminho.append(no.tabuleiro)
-        no = no.pai
-    return list(reversed(caminho))
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Algoritmo de busca (UCS e \texorpdfstring{$A^*$}{A*})}
-
-A busca de Custo Uniforme (UCS) é um caso particular do $A^*$ com heurística nula ($h \equiv 0$). Em ambos, mantemos a \emph{fronteira} em uma fila de prioridade ordenada por $f(n) = g(n) + h(n)$ e um mapa \texttt{custo\_ate} para dominância. Estados visitados são marcados em \texttt{fechados}.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-import heapq
-
-def busca(tabuleiro_inicial, algoritmo="ucs", heuristica="manhattan",
-          limite_expansoes=None):
-    """Executa UCS ou A* e retorna um dicionário com métricas e resultado."""
-    t_inicial = tabuleiro_para_tupla(tabuleiro_inicial)
-    t_objetivo = objetivo_tupla()
-
-    if algoritmo not in ("ucs", "astar"):
-        raise ValueError("algoritmo deve ser 'ucs' ou 'astar'")
-
-    if algoritmo == "astar":
-        if   heuristica == "manhattan":     hfun = distancia_manhattan
-        elif heuristica == "pecas_erradas": hfun = pecas_erradas
-        else: raise ValueError("heuristica deve ser 'manhattan' ou 'pecas_erradas'")
-    else:
-        hfun = lambda _: 0  # UCS
-
-    fronteira = []
-    contador = 0
-    no_inicial = No(t_inicial, pai=None, custo=0)
-    heapq.heappush(fronteira, (hfun(t_inicial), contador, no_inicial))
-    contador += 1
-
-    custo_ate = {t_inicial: 0}
-    fechados = set()
-    expandidos = 0
-
-    while fronteira:
-        _, _, atual = heapq.heappop(fronteira)
-
-        if atual.tabuleiro == t_objetivo:
-            caminho = reconstruir_caminho(atual)
-            return {
-                "encontrado": True,
-                "movimentos": len(caminho) - 1,
-                "custo": atual.custo,
-                "caminho": caminho,
-                "tamanho_fechados": len(fechados),
-                "tamanho_fronteira": len(fronteira),
-                "expandidos": expandidos,
-                "algoritmo": algoritmo,
-                "heuristica": heuristica if algoritmo == "astar" else None
-            }
-
-        if atual.tabuleiro in fechados:
-            continue
-        fechados.add(atual.tabuleiro)
-
-        expandidos += 1
-        if limite_expansoes is not None and expandidos >= limite_expansoes:
-            return {
-                "encontrado": False,
-                "motivo": f"limite_expansoes={limite_expansoes} atingido",
-                "tamanho_fechados": len(fechados),
-                "tamanho_fronteira": len(fronteira),
-                "expandidos": expandidos,
-                "algoritmo": algoritmo,
-                "heuristica": heuristica if algoritmo == "astar" else None
-            }
-
-        for filho in atual.expandir():
-            g = filho.custo
-            if (filho.tabuleiro not in custo_ate) or (g < custo_ate[filho.tabuleiro]):
-                custo_ate[filho.tabuleiro] = g
-                f = g + hfun(filho.tabuleiro)
-                heapq.heappush(fronteira, (f, contador, filho))
-                contador += 1
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Impressão do caminho solução}
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-def mostrar_caminho_solucao(caminho):
-    """Imprime o caminho em formato 3x3 por passo."""
-    for passo, t in enumerate(caminho):
-        print(f"Passo {passo}:")
-        for r in range(LINHAS):
-            print(list(t[r*COLS:(r+1)*COLS]))
-        print()
-\end{minted}
-
-% ---------------------------------------------------------
-
-\section{Exemplo de execução e saída}
-
-O trecho a seguir embaralha uma instância solucionável e executa UCS e $A^*$ com Manhattan, reportando as métricas solicitadas.
-
-\begin{minted}[frame=lines,linenos,fontsize=\footnotesize]{python}
-if __name__ == "__main__":
-    demo = tabuleiro_aleatorio_soluvel(movimentos_embaralhar=30, seed=39)
-    print("Tabuleiro inicial:")
-    desenhar_tabuleiro(demo)
-    print("\nSolucionável?", eh_soluvel(demo))
-
-    print("\n== UCS ==")
-    r1 = busca(demo, algoritmo="ucs")
-    print({k: v for k, v in r1.items() if k != "caminho"})
-
-    print("\n== A* (Manhattan) ==")
-    r2 = busca(demo, algoritmo="astar", heuristica="manhattan")
-    print({k: v for k, v in r2.items() if k != "caminho"})
-
-    if r2.get("encontrado"):
-        print("\nPrimeiros 5 passos (A*):")
-        mostrar_caminho_solucao(r2["caminho"][:5])
-\end{minted}
+% =========================================================  
+% Capítulo 2 — Métodos de Busca  
+% (este arquivo é incluído pelo main.tex dentro de \chapter)  
+% =========================================================  
+  
+\section{Modelagem do Problema como Espaço de Estados}  
+  
+O \emph{8-puzzle} é um problema clássico de busca em Inteligência Artificial, modelado por um espaço de estados $S$, operadores $A$, estado inicial $s_0$ e um conjunto de estados objetivo $G$ \cite{russell2010artificial}. Cada estado é uma configuração do tabuleiro $3\times 3$, onde as peças são permutadas por movimentos do espaço vazio (representado por um número ou símbolo especial).  
+  
+Formalmente, o problema pode ser descrito como:  
+\begin{itemize}  
+    \item $S$: conjunto de todas as permutações possíveis das peças (incluindo o espaço vazio).  
+    \item $s_0 \in S$: estado inicial fornecido.  
+    \item $G \subset S$: conjunto contendo o estado objetivo (configuração ordenada).  
+    \item $A(s)$: conjunto de operadores aplicáveis em $s$, correspondendo aos movimentos possíveis do espaço vazio (cima, baixo, esquerda, direita).  
+    \item Função de custo $c(s, a, s')$: definida a seguir.  
+\end{itemize}  
+  
+\begin{equation}  
+    c(s, a, s') = 1  
+\end{equation}  
+  
+\noindent  
+Para cada movimento realizado (do estado $s$ para $s'$ por meio da ação $a$), atribui-se custo unitário \cite{russell2010artificial}.  
+  
+Nem toda permutação é solucionável. Para o 8-puzzle, um estado é solucionável se o número de inversões (pares de peças fora da ordem) é par \cite{nilsson1998}.  
+  
+\section{Busca de Custo Uniforme (UCS)}  
+  
+A \emph{Busca de Custo Uniforme} (Uniform Cost Search, UCS) é um algoritmo que expande sempre o nó de menor custo acumulado $g(n)$ a partir do estado inicial. Trata-se de um caso particular do algoritmo $A^*$ com heurística nula ($h(n) \equiv 0$).  
+  
+A fronteira é implementada como uma fila de prioridade ordenada por $g(n)$. O algoritmo garante encontrar o caminho de menor custo (ótimo), desde que todos os custos sejam positivos, como ocorre no 8-puzzle \cite{russell2010artificial}.  
+  
+\begin{equation}  
+    f(n) = g(n)  
+\end{equation}  
+  
+\noindent  
+onde $g(n)$ é o custo do caminho do estado inicial até $n$.  
+  
+\section{Algoritmo $A^*$}  
+  
+O algoritmo $A^*$ é uma generalização da UCS que utiliza uma função heurística $h(n)$ para estimar o custo restante até o objetivo. A cada passo, expande-se o nó com menor valor de:  
+  
+\begin{equation}  
+    f(n) = g(n) + h(n)  
+\end{equation}  
+  
+\noindent  
+onde:  
+\begin{itemize}  
+    \item $g(n)$: custo do caminho do nó inicial até $n$;  
+    \item $h(n)$: estimativa (heurística) do custo de $n$ até o objetivo.  
+\end{itemize}  
+  
+Quando $h(n)$ é \emph{admissível} (nunca superestima o custo real) e \emph{consistente} (ou monotônica), o $A^*$ é completo e ótimo \cite{russell2010artificial,nilsson1998,ertel2017}.  
+  
+\section{Heurísticas para o 8-puzzle}  
+  
+Heurísticas são funções $h: S \to \mathbb{N}$ que estimam o custo mínimo do estado corrente até o objetivo. Para o 8-puzzle, destacam-se:  
+  
+\begin{enumerate}[label=(\alph*)]  
+    \item \textbf{Peças Fora do Lugar} (\emph{Misplaced Tiles}):  
+    \begin{equation}  
+        h_1(n) = \sum_{i=1}^{8} \mathbb{I}[x_i \neq x_i^*]  
+    \end{equation}  
+    onde $x_i$ é a posição da peça $i$ em $n$ e $x_i^*$ sua posição no objetivo.  
+  
+    \item \textbf{Distância de Manhattan}:  
+    \begin{equation}  
+        h_2(n) = \sum_{i=1}^{8} \left( |l_i - l_i^*| + |c_i - c_i^*| \right)  
+    \end{equation}  
+    onde $(l_i, c_i)$ é a linha e coluna da peça $i$ em $n$, e $(l_i^*, c_i^*)$ no objetivo.  
+  
+    \item \textbf{Heurísticas Não-Admissíveis}: São funções que podem superestimar o custo real, podendo tornar o algoritmo não ótimo. Exemplo: $h_3(n) = 2 \cdot h_2(n)$.  
+\end{enumerate}  
+  
+Tanto $h_1$ quanto $h_2$ são heurísticas admissíveis e consistentes \cite{russell2010artificial}.  
+  
+\section{Propriedades Teóricas dos Métodos de Busca}  
+  
+\subsection{Admissibilidade e Consistência}  
+  
+Uma heurística $h(n)$ é \textbf{admissível} se, para todo $n$,  
+\begin{equation}  
+    0 \leq h(n) \leq h^*(n)  
+\end{equation}  
+onde $h^*(n)$ é o custo real mínimo de $n$ ao objetivo.  
+  
+Ela é \textbf{consistente} (ou monotônica) se, para todo par de estados $n$ e $n'$ tal que $n'$ é sucessor de $n$:  
+\begin{equation}  
+    h(n) \leq c(n, n') + h(n')  
+\end{equation}  
+Se $h$ é consistente, $A^*$ nunca expande um mesmo nó mais de uma vez.  
+  
+\subsection{Complexidade}  
+  
+A complexidade temporal de UCS e $A^*$ depende do fator de ramificação $b$ e da profundidade da solução $d$:  
+\begin{itemize}  
+    \item \textbf{UCS}: $O(b^{C^*/\epsilon})$, onde $C^*$ é o custo da solução ótima e $\epsilon$ é o menor custo de ação.  
+    \item \textbf{$A^*$}: no pior caso, igual à busca em largura, mas pode ser substancialmente menor com heurística informada.  
+\end{itemize}  
+  
+\subsection{Ótimo e Completude}  
+  
+\begin{itemize}  
+    \item \textbf{Busca de Custo Uniforme}: ótima e completa para custos positivos.  
+    \item \textbf{$A^*$}: ótima e completa se $h$ for admissível.  
+\end{itemize}  
+  
+\section{Resumo}  
+  
+Neste capítulo, apresentaram-se os fundamentos dos métodos de busca aplicados ao 8-puzzle, incluindo a modelagem do espaço de estados, o funcionamento dos algoritmos UCS e $A^*$, as principais heurísticas utilizadas e suas propriedades teóricas. Para detalhes de implementação e experimentos, ver Capítulo~3.  
+  
+% ---------------------------------------------------------  

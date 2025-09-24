@@ -5,29 +5,23 @@
 \PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Gera um tabuleiro aleatório solucionável a partir do objetivo.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
     \PYG{k}{if} \PYG{n}{seed} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
         \PYG{n}{random}\PYG{o}{.}\PYG{n}{seed}\PYG{p}{(}\PYG{n}{seed}\PYG{p}{)}
-
     \PYG{n}{tabuleiro} \PYG{o}{=} \PYG{p}{[}\PYG{n}{linha}\PYG{p}{[:]} \PYG{k}{for} \PYG{n}{linha} \PYG{o+ow}{in} \PYG{n}{TABULEIRO\PYGZus{}OBJETIVO}\PYG{p}{]}
     \PYG{n}{t} \PYG{o}{=} \PYG{n}{tabuleiro\PYGZus{}para\PYGZus{}tupla}\PYG{p}{(}\PYG{n}{tabuleiro}\PYG{p}{)}
-
     \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{pos\PYGZus{}branco}\PYG{p}{(}\PYG{n}{t}\PYG{p}{):}
-\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Retorna (i, j) do espaço vazio (valor 9) em t.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
         \PYG{n}{idx} \PYG{o}{=} \PYG{n}{t}\PYG{o}{.}\PYG{n}{index}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{)}
         \PYG{k}{return} \PYG{n+nb}{divmod}\PYG{p}{(}\PYG{n}{idx}\PYG{p}{,} \PYG{n}{COLS}\PYG{p}{)}
-
     \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{movimentos\PYGZus{}embaralhar}\PYG{p}{):}
         \PYG{n}{i}\PYG{p}{,} \PYG{n}{j} \PYG{o}{=} \PYG{n}{pos\PYGZus{}branco}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}
         \PYG{n}{movimentos} \PYG{o}{=} \PYG{p}{[]}
-        \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:}           \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}
-        \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{LINHAS} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{:}  \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}
-        \PYG{k}{if} \PYG{n}{j} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:}           \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((} \PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{))}
-        \PYG{k}{if} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{COLS} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{:}    \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
+        \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:} \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}
+        \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{LINHAS}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:} \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}
+        \PYG{k}{if} \PYG{n}{j} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:} \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{))}
+        \PYG{k}{if} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{COLS}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:} \PYG{n}{movimentos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
         \PYG{n}{di}\PYG{p}{,} \PYG{n}{dj} \PYG{o}{=} \PYG{n}{random}\PYG{o}{.}\PYG{n}{choice}\PYG{p}{(}\PYG{n}{movimentos}\PYG{p}{)}
         \PYG{n}{ni}\PYG{p}{,} \PYG{n}{nj} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{n}{di}\PYG{p}{,} \PYG{n}{j} \PYG{o}{+} \PYG{n}{dj}
-
         \PYG{n}{lst} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}
         \PYG{n}{idx1}\PYG{p}{,} \PYG{n}{idx2} \PYG{o}{=} \PYG{n}{i}\PYG{o}{*}\PYG{n}{COLS} \PYG{o}{+} \PYG{n}{j}\PYG{p}{,} \PYG{n}{ni}\PYG{o}{*}\PYG{n}{COLS} \PYG{o}{+} \PYG{n}{nj}
         \PYG{n}{lst}\PYG{p}{[}\PYG{n}{idx1}\PYG{p}{],} \PYG{n}{lst}\PYG{p}{[}\PYG{n}{idx2}\PYG{p}{]} \PYG{o}{=} \PYG{n}{lst}\PYG{p}{[}\PYG{n}{idx2}\PYG{p}{],} \PYG{n}{lst}\PYG{p}{[}\PYG{n}{idx1}\PYG{p}{]}
         \PYG{n}{t} \PYG{o}{=} \PYG{n+nb}{tuple}\PYG{p}{(}\PYG{n}{lst}\PYG{p}{)}
-
     \PYG{k}{return} \PYG{n}{tupla\PYGZus{}para\PYGZus{}tabuleiro}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}
 \end{MintedVerbatim}
