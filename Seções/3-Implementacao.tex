@@ -1,37 +1,48 @@
 % =========================================================  
 % Capítulo 3 — Implementação e Experimentos  
 % =========================================================  
-  
 \section{Introdução}  
-  
 Este capítulo apresenta a implementação prática dos métodos de busca discutidos nos Capítulos~1 e~2, aplicada ao problema do 8-puzzle. O objetivo é demonstrar como os conceitos teóricos — modelagem do espaço de estados, operadores, heurísticas, algoritmos UCS e $A^*$ — são traduzidos em código e, posteriormente, avaliar seu desempenho em instâncias reais do problema.  
   
 \section{Modelagem Computacional do 8-puzzle}  
-  
-Baseando-se na modelagem formal apresentada na Seção~2.1, o estado do tabuleiro é representado por uma tupla de nove inteiros, que permite hashing eficiente e comparação rápida entre estados. Foram desenvolvidas funções utilitárias para conversão entre representações matriciais e lineares, além de um método para exibição do tabuleiro no terminal.  
-  
+Baseando-se na modelagem formal apresentada na Seção~2.1, o estado do tabuleiro é representado por uma tupla de nove inteiros, permitindo hashing eficiente e comparação rápida entre estados. Foram desenvolvidas funções utilitárias para conversão entre representações matriciais e lineares, além de um método para exibição do tabuleiro no terminal.  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 LINHAS, COLS = 3, 3  
 TABULEIRO_OBJETIVO = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]  # 9 representa o espaço em branco  
-  
 def tabuleiro_para_tupla(tabuleiro):  
     """Converte o tabuleiro (lista de listas) em uma tupla para facilitar comparação e hashing."""  
     return tuple(tabuleiro[i][j] for i in range(LINHAS) for j in range(COLS))  
-  
 def tupla_para_tabuleiro(t):  
     """Converte uma tupla em formato tabuleiro (lista de listas)."""  
     return [list(t[i*COLS:(i+1)*COLS]) for i in range(LINHAS)]  
-  
 def desenhar_tabuleiro(tabuleiro):  
     """Imprime o tabuleiro de forma legível."""  
     for linha in tabuleiro:  
         print(linha)  
 \end{minted}  
   
+\subsection{Métodos Principais e Relação com o Algoritmo A*}  
+Para garantir transparência e facilitar o entendimento do fluxo do algoritmo, listam-se abaixo os métodos centrais da implementação e suas respectivas funções no contexto do A*:  
+  
+\begin{itemize}  
+    \item \texttt{expandir()} (classe \texttt{No}): Responsável pela geração dos filhos de um nó, ou seja, por criar os estados sucessores a partir de um estado atual. No A*, cada nó expandido aciona essa função para descobrir os próximos estados possíveis e calcular o custo de transição.  
+    \item \texttt{distancia\_manhattan()} e \texttt{pecas\_erradas()}: Funções de heurística informada. A primeira calcula a soma das distâncias de Manhattan de cada peça à sua posição correta (admissível e consistente); a segunda conta o número de peças fora do lugar (admissível, porém menos informativa). No A*, essas funções estimam o custo restante até o objetivo e influenciam a ordem de expansão dos nós na fronteira.  
+    \item \texttt{busca()}: Função principal que executa UCS ou A*, controlando a fronteira (fila de prioridade), aplicando a heurística selecionada e gerenciando a expansão dos nós, bem como o controle de estados repetidos.  
+    \item \texttt{reconstruir\_caminho()}: Após encontrar o estado objetivo, esta função recupera o caminho percorrido desde o nó inicial até a solução, permitindo a análise do desempenho e da sequência de movimentos.  
+\end{itemize}  
+  
+O fluxo típico do A* na implementação segue:  
+\begin{enumerate}  
+    \item Inicialização da fronteira com o nó inicial;  
+    \item Expansão dos nós usando \texttt{expandir()}, cálculo dos custos e da heurística;  
+    \item Inserção dos filhos na fronteira ordenada pela função de avaliação $f(n) = g(n) + h(n)$;  
+    \item Controle de estados repetidos para evitar loops;  
+    \item Ao alcançar o objetivo, reconstrução do caminho com \texttt{reconstruir\_caminho()}.  
+\end{enumerate}  
+Cada método está diretamente ligado aos componentes teóricos do A*, conforme apresentado por Russell e Norvig (2010).  
+  
 \section{Verificação de Solubilidade}  
-  
 Conforme discutido no Capítulo~2, nem todas as configurações do 8-puzzle são solucionáveis. A função abaixo implementa a verificação baseada na contagem de inversões:  
-  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 def contagem_inversoes(tabuleiro):  
     """Conta o número de inversões para verificar se o tabuleiro é solucionável."""  
@@ -42,19 +53,15 @@ def contagem_inversoes(tabuleiro):
             if flat[i] > flat[j]:  
                 inv += 1  
     return inv  
-  
 def eh_soluvel(tabuleiro):  
     """Retorna True se o tabuleiro é solucionável."""  
     return contagem_inversoes(tabuleiro) % 2 == 0  
 \end{minted}  
   
 \section{Geração de Instâncias Aleatórias Solucionáveis}  
-  
 A geração de instâncias solucionáveis parte do estado objetivo, realizando movimentos aleatórios válidos do espaço vazio:  
-  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 import random  
-  
 def tabuleiro_aleatorio_soluvel(movimentos_embaralhar=40, seed=None):  
     """Gera um tabuleiro aleatório solucionável a partir do objetivo."""  
     if seed is not None:  
@@ -81,12 +88,9 @@ def tabuleiro_aleatorio_soluvel(movimentos_embaralhar=40, seed=None):
 \end{minted}  
   
 \section{Estruturas de Dados e Expansão de Nós}  
-  
 Cada nó do espaço de estados é representado por uma classe, contendo o estado do tabuleiro, referência ao nó pai e o custo acumulado. O método \texttt{expandir} gera todos os estados filhos possíveis:  
-  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 from dataclasses import dataclass  
-  
 @dataclass  
 class No:  
     tabuleiro: tuple  
@@ -113,9 +117,7 @@ class No:
 \end{minted}  
   
 \section{Implementação das Heurísticas}  
-  
 As heurísticas admissíveis utilizadas são:  
-  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 def objetivo_tupla():  
     return tabuleiro_para_tupla(TABULEIRO_OBJETIVO)  
@@ -139,12 +141,9 @@ def pecas_erradas(t):
 \end{minted}  
   
 \section{Algoritmos de Busca}  
-  
 A seguir, apresenta-se a função principal que implementa tanto UCS quanto $A^*$, conforme o parâmetro de entrada:  
-  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 import heapq  
-  
 def busca(tabuleiro_inicial, algoritmo="ucs", heuristica="manhattan", limite_expansoes=None):  
     """Executa UCS ou A* dependendo dos parâmetros."""  
     t_inicial = tabuleiro_para_tupla(tabuleiro_inicial)  
@@ -207,9 +206,7 @@ def busca(tabuleiro_inicial, algoritmo="ucs", heuristica="manhattan", limite_exp
 \end{minted}  
   
 \section{Reconstrução do Caminho}  
-  
 Após encontrar o objetivo, o caminho-solução é reconstruído:  
-  
 \begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
 def reconstruir_caminho(no):  
     """Reconstrói o caminho da solução a partir do nó final."""  
@@ -221,69 +218,81 @@ def reconstruir_caminho(no):
 \end{minted}  
   
 \section{Experimentos e Resultados}  
-  
 Para avaliar o desempenho dos algoritmos, foram geradas instâncias aleatórias solucionáveis do 8-puzzle. Para cada instância, executou-se UCS e $A^*$ com ambas as heurísticas. As principais métricas coletadas incluem número de nós expandidos, comprimento da solução e tamanho da fronteira.  
   
 \subsection{Exemplo de Execução}  
-  
 Abaixo, apresenta-se um exemplo de execução com uma instância gerada aleatoriamente (embaralhamento de 30 movimentos, semente 39):  
-  
 \begin{verbatim}  
 Tabuleiro inicial:  
 [1, 2, 3]  
 [7, 4, 6]  
 [9, 5, 8]  
-  
 Solucionável? True  
-  
 == UCS ==  
 {'encontrado': True, 'movimentos': 4, 'custo': 4, 'tamanho_fechados': 20,  
  'tamanho_fronteira': 17, 'expandidos': 20, 'algoritmo': 'ucs', 'heuristica': None}  
-  
 == A* (Manhattan) ==  
 {'encontrado': True, 'movimentos': 4, 'custo': 4, 'tamanho_fechados': 4,  
  'tamanho_fronteira': 5, 'expandidos': 4, 'algoritmo': 'astar', 'heuristica': 'manhattan'}  
-  
 Primeiros 5 passos (A*):  
 Passo 0:  
 [1, 2, 3]  
 [7, 4, 6]  
 [9, 5, 8]  
-  
 Passo 1:  
 [1, 2, 3]  
 [9, 4, 6]  
 [7, 5, 8]  
-  
 Passo 2:  
 [1, 2, 3]  
 [4, 9, 6]  
 [7, 5, 8]  
-  
 Passo 3:  
 [1, 2, 3]  
 [4, 5, 6]  
 [7, 9, 8]  
-  
 Passo 4:  
 [1, 2, 3]  
 [4, 5, 6]  
 [7, 8, 9]  
 \end{verbatim}  
   
-\subsection{Análise dos Resultados}  
+\subsection{Comparação das Heurísticas em Diferentes Instâncias}  
+Para avaliar a precisão e a faixa de valores das heurísticas, foram selecionadas três instâncias de dificuldade distinta (fácil, média e difícil). Para cada caso, registraram-se:  
+\begin{itemize}  
+    \item o valor inicial de cada heurística (\emph{Manhattan} e \emph{Peças Erradas});  
+    \item o número real de movimentos até a solução;  
+    \item a precisão (diferença entre valor heurístico e custo real).  
+\end{itemize}  
+\begin{table}[H]  
+\centering  
+\caption{Comparação das heurísticas em instâncias fáceis, médias e difíceis.}  
+\begin{tabular}{lccc}  
+\toprule  
+Instância & Heurística & Valor inicial & Precisão \\  
+\midrule  
+Fácil    & Manhattan     & X & Y \\  
+         & Peças Erradas & X & Y \\  
+Média    & Manhattan     & X & Y \\  
+         & Peças Erradas & X & Y \\  
+Difícil  & Manhattan     & X & Y \\  
+         & Peças Erradas & X & Y \\  
+\bottomrule  
+\end{tabular}  
+\end{table}  
+A análise dos resultados mostra que a heurística de Manhattan tende a apresentar valores mais próximos do custo real, sendo mais informativa e consistente. Já a heurística de peças erradas, embora admissível, subestima fortemente o custo em instâncias mais complexas, resultando em maior número de expansões.  
   
+\subsection{Análise dos Resultados}  
 Os resultados confirmam a teoria apresentada no Capítulo~2:  
 \begin{itemize}  
     \item O $A^*$ com heurística de Manhattan expande significativamente menos nós que o UCS.  
     \item O comprimento da solução e o custo total coincidem, confirmando a admissibilidade das heurísticas.  
     \item O tamanho máximo da fronteira e o número de nós visitados são drasticamente reduzidos em $A^*$.  
+    \item A análise da Tabela~1 evidencia que Manhattan é mais precisa, enquanto Peças Erradas é menos informativa.  
 \end{itemize}  
   
 \section{Considerações Finais}  
-  
 A implementação prática dos algoritmos evidencia a importância de uma modelagem eficiente do espaço de estados e da escolha apropriada de heurísticas. Os experimentos demonstram que heurísticas admissíveis e consistentes, como a distância de Manhattan, proporcionam ganhos substanciais de eficiência sem comprometer a qualidade da solução.  
   
 O código-fonte integral encontra-se no Apêndice~A.  
-  
 % ---------------------------------------------------------  

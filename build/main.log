@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.9.23)  24 SEP 2025 20:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.9.23)  28 SEP 2025 13:25
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -812,7 +812,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <14.4> on input line 40.
 (Seções/1-Introdução.tex
-<Imagens/8puzzle7.png, id=201, 570.63188pt x 632.3625pt>
+<Imagens/8puzzle7.png, id=213, 570.63188pt x 632.3625pt>
 File: Imagens/8puzzle7.png Graphic file (type png)
 <use Imagens/8puzzle7.png>
 Package pdftex.def Info: Imagens/8puzzle7.png  used on input line 13.
@@ -923,21 +923,21 @@ Cap\'{\i }tulo 3.
 \pydata@fh@0=\write8
 \openout8 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250924205414 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
+runsystem(latexminted config  --timestamp 20250928132525 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
 
  (c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250924205414 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
+runsystem(latexminted cleanconfig  --timestamp 20250928132525 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
 
- (build/_minted/friendly.style.minted) (build/_minted/0E06CC07E42F857B9501A082F0149337.highlight.minted
+ (build/_minted/friendly.style.minted) (build/_minted/1F7125F2DD538F6DFFF4FE9B3DF5E919.highlight.minted
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 3.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 5.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 4.
 
 
 [9
 
-]) (build/_minted/735A8938C94B3A4741E315902A593F80.highlight.minted) (build/_minted/6CA0A3799D55777E989804904AD01949.highlight.minted
+]) (build/_minted/C01C21C57887B3CBA0BA3B5440765380.highlight.minted
 
 
 Package fancyhdr Warning: \headheight is too small (14.0pt): 
@@ -946,7 +946,7 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[10]) (build/_minted/F186BB2F937171A1DF53285050A30A21.highlight.minted) (build/_minted/80A242EE2376898E462F997376B4D491.highlight.minted
+[10]) (build/_minted/873A83758D0F5C9724D00ACD6161106C.highlight.minted) (build/_minted/E8A8676B3FFC2599483A50743D698FF0.highlight.minted
 
 
 Package fancyhdr Warning: \headheight is too small (14.0pt): 
@@ -955,8 +955,17 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[11]) (build/_minted/F34B61BDC886D3AFE10D8C16EC18F183.highlight.minted
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 9.
+[11]) (build/_minted/80A242EE2376898E462F997376B4D491.highlight.minted
+
+
+Package fancyhdr Warning: \headheight is too small (14.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
+
+[12]) (build/_minted/6AE2DFAC300DEB2CD69FC1C2FE073603.highlight.minted
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 8.
  (C:\Program Files\MiKTeX\tex/latex/lm\ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -976,10 +985,7 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[12{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}])
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
+[13{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}]) (build/_minted/3AAAB9B9C8840370BA8BC8A6457DBAF0.highlight.minted)
 
 
 Package fancyhdr Warning: \headheight is too small (14.0pt): 
@@ -988,17 +994,17 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[13] (build/_minted/3AAAB9B9C8840370BA8BC8A6457DBAF0.highlight.minted)
+[14]
 Package microtype Info: Character `texttrademark ' is missing
 (microtype)             in font `TS1/lmtt/m/n/12'.
 (microtype)             Ignoring protrusion settings for this character.
 
-Overfull \hbox (57.28114pt too wide) in paragraph at lines 272--272
+Overfull \hbox (57.28114pt too wide) in paragraph at lines 258--258
 [] \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 tamanho_fronteira\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : 17, \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 expandidos\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : 20, \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 algoritmo\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 ucs\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 , \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 heuristica\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : None}[] 
  []
 
 
-Overfull \hbox (100.50616pt too wide) in paragraph at lines 272--272
+Overfull \hbox (100.50616pt too wide) in paragraph at lines 258--258
 [] \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 tamanho_fronteira\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : 5, \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 expandidos\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : 4, \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 algoritmo\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 astar\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 , \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 heuristica\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 : \TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 manhattan\TS1/lmtt/m/n/12 '\T1/lmtt/m/n/12 }[] 
  []
 
@@ -1011,7 +1017,7 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[14]
+[15]
 
 
 Package fancyhdr Warning: \headheight is too small (14.0pt): 
@@ -1020,7 +1026,7 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[15])
+[16])
 
 
 Package fancyhdr Warning: \headheight is too small (14.0pt): 
@@ -1029,17 +1035,17 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
 
-[16]
+[17]
 Cap\'{\i }tulo 4.
 (Seções/4-Conclusão.tex)
 
-[17
+[18
 
 ] (c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.bbl)
 No file main.ind.
 
 
-[18
+[19
 
 
 ] (c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.aux)
@@ -1048,20 +1054,20 @@ LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 1ADA5CD49C81FF922FFDB4DFDD42FBE7;5157.
+(rerunfilecheck)             Checksum: AD3CF854F7BA5BCDEB895AAEAC444948;5828.
  ) 
 Here is how much of TeX's memory you used:
- 23155 strings out of 468130
- 432527 string characters out of 5440700
- 992098 words of memory out of 5000000
- 51115 multiletter control sequences out of 15000+600000
- 719874 words of font info for 189 fonts, out of 8000000 for 9000
+ 23177 strings out of 468130
+ 432817 string characters out of 5440700
+ 990098 words of memory out of 5000000
+ 51122 multiletter control sequences out of 15000+600000
+ 720147 words of font info for 192 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 80i,13n,103p,1003b,1206s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 80i,13n,103p,1003b,1202s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmri10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmri12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmss12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtti10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.pdf (21 pages, 540956 bytes).
+Output written on c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.pdf (22 pages, 552717 bytes).
 PDF statistics:
- 483 PDF objects out of 1000 (max. 8388607)
- 80 named destinations out of 1000 (max. 500000)
- 52966 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 506 PDF objects out of 1000 (max. 8388607)
+ 89 named destinations out of 1000 (max. 500000)
+ 52982 words of extra memory for PDF output out of 61914 (max. 10000000)
 

@@ -1,6 +1,5 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
 \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{dataclasses}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{dataclass}
-
 \PYG{n+nd}{@dataclass}
 \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{No}\PYG{p}{:}
     \PYG{n}{tabuleiro}\PYG{p}{:} \PYG{n+nb}{tuple}

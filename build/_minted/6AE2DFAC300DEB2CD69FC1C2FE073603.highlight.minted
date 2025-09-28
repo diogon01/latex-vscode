@@ -1,6 +1,5 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
 \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{heapq}
-
 \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{busca}\PYG{p}{(}\PYG{n}{tabuleiro\PYGZus{}inicial}\PYG{p}{,} \PYG{n}{algoritmo}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}ucs\PYGZdq{}}\PYG{p}{,} \PYG{n}{heuristica}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}manhattan\PYGZdq{}}\PYG{p}{,} \PYG{n}{limite\PYGZus{}expansoes}\PYG{o}{=}\PYG{k+kc}{None}\PYG{p}{):}
 \PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Executa UCS ou A* dependendo dos parâmetros.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
     \PYG{n}{t\PYGZus{}inicial} \PYG{o}{=} \PYG{n}{tabuleiro\PYGZus{}para\PYGZus{}tupla}\PYG{p}{(}\PYG{n}{tabuleiro\PYGZus{}inicial}\PYG{p}{)}

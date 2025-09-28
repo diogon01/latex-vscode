@@ -1,6 +1,5 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
 \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{random}
-
 \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{tabuleiro\PYGZus{}aleatorio\PYGZus{}soluvel}\PYG{p}{(}\PYG{n}{movimentos\PYGZus{}embaralhar}\PYG{o}{=}\PYG{l+m+mi}{40}\PYG{p}{,} \PYG{n}{seed}\PYG{o}{=}\PYG{k+kc}{None}\PYG{p}{):}
 \PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Gera um tabuleiro aleatório solucionável a partir do objetivo.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
     \PYG{k}{if} \PYG{n}{seed} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
