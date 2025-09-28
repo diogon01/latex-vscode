@@ -13,50 +13,54 @@ Para cada instância, foram registrados:
   
 \begin{table}[H]  
 \centering  
-\caption{Comparação das heurísticas em instâncias fáceis, médias e difíceis.}  
-\begin{tabular}{lcccc}  
+\caption{Precisão das heurísticas para diferentes instâncias do 8-puzzle.}  
+\begin{tabular}{l l c c c}  
 \toprule  
-Instância & Heurística & Valor Inicial & Movimentos reais & Precisão \\  
+Instância & Heur. & Valor Ini. & Mov. Real & Precisão \\  
 \midrule  
-Fácil    & Manhattan     & 4 & 5 & -1 \\  
-         & Peças Erradas & 3 & 5 & -2 \\  
-Média    & Manhattan     & 7 & 9 & -2 \\  
-         & Peças Erradas & 4 & 9 & -5 \\  
-Difícil  & Manhattan     & 12 & 15 & -3 \\  
-         & Peças Erradas & 6 & 15 & -9 \\  
+Fácil     & Manh.      & 4 & 5  & -1 \\  
+          & Peç. Err.  & 3 & 5  & -2 \\  
+Média     & Manh.      & 7 & 9  & -2 \\  
+          & Peç. Err.  & 4 & 9  & -5 \\  
+Difícil   & Manh.      & 12 & 15 & -3 \\  
+          & Peç. Err.  & 6  & 15 & -9 \\  
 \bottomrule  
 \end{tabular}  
 \end{table}  
   
+\vspace{0.5cm}  
+  
 \subsection{Comparação Quantitativa do Desempenho dos Algoritmos}  
   
-A tabela a seguir apresenta uma comparação do desempenho dos algoritmos UCS, A* com Manhattan e A* com Peças Erradas nas mesmas instâncias, considerando as métricas solicitadas: número de movimentos (solução), nós expandidos, tamanho máximo da fronteira e tempo de execução.  
+A tabela a seguir apresenta uma comparação do desempenho dos algoritmos UCS, A* com Manhattan e A* com Peças Erradas nas mesmas instâncias, considerando as métricas solicitadas: número de movimentos (solução), nós expandidos, tamanho máximo da fronteira e tempo de execução. Para tornar a tabela mais enxuta e facilitar a leitura, foram usadas abreviações: Mov. (Movimentos), Nós Exp. (Nós Expandidos), Fron. (Tam. Fronteira), Temp. (Tempo Execução).  
   
 \begin{table}[H]  
 \centering  
 \caption{Desempenho dos algoritmos por instância e heurística.}  
 \begin{tabular}{l l c c c c}  
 \toprule  
-Instância & Algoritmo & Movimentos & Nós Expandidos & Tamanho Fronteira & Tempo Execução \\  
+Instância & Algoritmo         & Mov. & Nós Exp. & Fron. & Temp. (s) \\  
 \midrule  
-Difícil   & UCS                     & 15 & 2350 & 1700 & 1.2 s \\  
-Difícil   & A* (Manhattan)          & 15 & 80   & 40   & 0.05 s \\  
-Difícil   & A* (Peças Erradas)      & 15 & 250  & 120  & 0.12 s \\  
-Média     & UCS                     & 9  & 300  & 220  & 0.10 s \\  
-Média     & A* (Manhattan)          & 9  & 20   & 10   & 0.01 s \\  
-Média     & A* (Peças Erradas)      & 9  & 60   & 35   & 0.03 s \\  
-Fácil     & UCS                     & 5  & 5    & 3    & <0.01 s \\  
-Fácil     & A* (Manhattan)          & 5  & 2    & 1    & <0.01 s \\  
-Fácil     & A* (Peças Erradas)      & 5  & 3    & 2    & <0.01 s \\  
+Difícil   & UCS               & 15   & 2350     & 1700  & 1.2   \\  
+Difícil   & A* (Manh.)        & 15   & 80       & 40    & 0.05  \\  
+Difícil   & A* (Peç. Err.)    & 15   & 250      & 120   & 0.12  \\  
+Média     & UCS               & 9    & 300      & 220   & 0.10  \\  
+Média     & A* (Manh.)        & 9    & 20       & 10    & 0.01  \\  
+Média     & A* (Peç. Err.)    & 9    & 60       & 35    & 0.03  \\  
+Fácil     & UCS               & 5    & 5        & 3     & <0.01 \\  
+Fácil     & A* (Manh.)        & 5    & 2        & 1     & <0.01 \\  
+Fácil     & A* (Peç. Err.)    & 5    & 3        & 2     & <0.01 \\  
 \bottomrule  
 \end{tabular}  
 \end{table}  
   
+\vspace{0.5cm}  
+  
 \subsection{Análise Comparativa}  
   
-Os resultados mostram que a heurística de Manhattan é mais informativa e consistente, apresentando valores iniciais mais próximos do número real de movimentos necessários para a solução em todas as instâncias analisadas. Isso se traduz em maior precisão, menor número de expansões e melhor desempenho do algoritmo A*. Por outro lado, a heurística de Peças Erradas, embora admissível, subestima fortemente o custo real, especialmente em casos mais difíceis, o que leva a maior número de expansões e maior tempo de execução. Portanto, para o problema do 8-puzzle, a heurística Manhattan é preferencial, pois guia a busca de forma mais eficiente sem comprometer a qualidade da solução.  
+Os resultados mostram que a heurística de Manhattan (Manh.) é mais informativa e consistente, apresentando valores iniciais mais próximos do número real de movimentos necessários para a solução em todas as instâncias analisadas. Isso se traduz em maior precisão, menor número de expansões e melhor desempenho do algoritmo A*. Por outro lado, a heurística de Peças Erradas (Peç. Err.), embora admissível, subestima fortemente o custo real, especialmente em casos mais difíceis, o que leva a maior número de expansões e maior tempo de execução. Portanto, para o problema do 8-puzzle, a heurística Manhattan é preferencial, pois guia a busca de forma mais eficiente sem comprometer a qualidade da solução.  
   
 Além disso, a comparação quantitativa confirma que o UCS, por não utilizar heurística, é significativamente menos eficiente, especialmente em instâncias de maior dificuldade, expandindo muito mais nós e consumindo mais tempo. O A* com Manhattan se destaca como a abordagem mais eficiente em todas as métricas analisadas.  
   
-Estes resultados estão de acordo com a literatura clássica (Russell \& Norvig, 2010; Nilsson, 1998), que reforça a importância do uso de heurísticas informativas e consistentes para busca ótima e eficiente em problemas como o 8-puzzle.  
+Estes resultados estão de acordo com a literatura clássica \cite{russell2010artificial,nilsson1998artificial}, que reforça a importância do uso de heurísticas informativas e consistentes para busca ótima e eficiente em problemas como o 8-puzzle.  
   

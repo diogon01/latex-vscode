@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.9.23)  28 SEP 2025 15:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.9.23)  28 SEP 2025 16:51
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -923,10 +923,10 @@ Cap\'{\i }tulo 3.
 \pydata@fh@0=\write8
 \openout8 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250928151838 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
+runsystem(latexminted config  --timestamp 20250928165129 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
 
  (c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250928151838 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
+runsystem(latexminted cleanconfig  --timestamp 20250928165129 FAD58DE7366495DB4650CFEFAC2FCD61)...executed.
 
  (build/_minted/friendly.style.minted) (build/_minted/1F7125F2DD538F6DFFF4FE9B3DF5E919.highlight.minted
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -1051,9 +1051,8 @@ Cap\'{\i }tulo 4.
 [18
 
 ]
-Overfull \hbox (95.11717pt too wide) in paragraph at lines 38--53
- [][] 
- []
+
+LaTeX Warning: Citation `nilsson1998artificial' on page 19 undefined on input line 65.
 
 )
 
@@ -1065,16 +1064,25 @@ Package fancyhdr Warning: \headheight is too small (14.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-14.02951pt}.
 
 [19]
+
+
+Package fancyhdr Warning: \headheight is too small (14.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-0.49998pt}.
+
+[20]
 Cap\'{\i }tulo 5.
 (Seções/4-Conclusão.tex)
 
-[20
+[21
 
 ] (c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.bbl)
 No file main.ind.
 
 
-[21
+[22
 
 
 ] (c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.aux)
@@ -1082,21 +1090,25 @@ No file main.ind.
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: E4976B34C837BF837DDE1576A0876EC4;8095.
  ) 
 Here is how much of TeX's memory you used:
- 23207 strings out of 468130
- 433937 string characters out of 5440700
+ 23212 strings out of 468130
+ 434022 string characters out of 5440700
  992170 words of memory out of 5000000
- 51137 multiletter control sequences out of 15000+600000
- 715812 words of font info for 191 fonts, out of 8000000 for 9000
+ 51139 multiletter control sequences out of 15000+600000
+ 715903 words of font info for 192 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  80i,13n,103p,1003b,1202s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmri12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmss12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtti10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.pdf (25 pages, 548091 bytes).
+Output written on c:\Users\robot\Downloads\UFSC\Trabalho_sobre_Métodos_de_busca\build\main.pdf (26 pages, 549274 bytes).
 PDF statistics:
- 573 PDF objects out of 1000 (max. 8388607)
- 99 named destinations out of 1000 (max. 500000)
+ 579 PDF objects out of 1000 (max. 8388607)
+ 100 named destinations out of 1000 (max. 500000)
  51006 words of extra memory for PDF output out of 51595 (max. 10000000)
 
