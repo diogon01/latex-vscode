@@ -1,8 +1,3 @@
-% =========================================================  
-% Capítulo 2 — Métodos de Busca  
-% (este arquivo é incluído pelo main.tex dentro de \chapter)  
-% =========================================================  
-  
 \section{Modelagem do Problema como Espaço de Estados}  
   
 O \emph{8-puzzle} é um problema clássico de busca em Inteligência Artificial, modelado por um espaço de estados $S$, operadores $A$, estado inicial $s_0$ e um conjunto de estados objetivo $G$ \cite{russell2010artificial}. Cada estado é uma configuração do tabuleiro $3\times 3$, onde as peças são permutadas por movimentos do espaço vazio (representado por um número ou símbolo especial).  
@@ -53,7 +48,7 @@ onde:
     \item $h(n)$: estimativa (heurística) do custo de $n$ até o objetivo.  
 \end{itemize}  
   
-Quando $h(n)$ é \emph{admissível} (nunca superestima o custo real) e \emph{consistente} (ou monotônica), o $A^*$ é completo e ótimo \cite{russell2010artificial,nilsson1998,ertel2017}.  
+Quando $h(n)$ é \emph{admissível} (nunca superestima o custo real) e \emph{consistente} (ou monotônica), o $A^*$ é completo e ótimo \cite{russell2010artificial,luger2009artificial,nilsson1998,ertel2017}.  
   
 \section{Heurísticas para o 8-puzzle}  
   
@@ -89,7 +84,7 @@ onde $h^*(n)$ é o custo real mínimo de $n$ ao objetivo.
   
 Ela é \textbf{consistente} (ou monotônica) se, para todo par de estados $n$ e $n'$ tal que $n'$ é sucessor de $n$:  
 \begin{equation}  
-    h(n) \leq c(n, n') + h(n')  
+    h(n) \leq c(n, a, n') + h(n')  
 \end{equation}  
 Se $h$ é consistente, $A^*$ nunca expande um mesmo nó mais de uma vez.  
   
@@ -112,4 +107,3 @@ A complexidade temporal de UCS e $A^*$ depende do fator de ramificação $b$ e d
   
 Neste capítulo, apresentaram-se os fundamentos dos métodos de busca aplicados ao 8-puzzle, incluindo a modelagem do espaço de estados, o funcionamento dos algoritmos UCS e $A^*$, as principais heurísticas utilizadas e suas propriedades teóricas. Para detalhes de implementação e experimentos, ver Capítulo~3.  
   
-% ---------------------------------------------------------  

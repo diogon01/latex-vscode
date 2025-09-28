@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{for} \PYG{n}{filho} \PYG{o+ow}{in} \PYG{n}{atual}\PYG{o}{.}\PYG{n}{expandir}\PYG{p}{():}
+    \PYG{n}{g} \PYG{o}{=} \PYG{n}{filho}\PYG{o}{.}\PYG{n}{custo}
+    \PYG{c+c1}{\PYGZsh{} Só adiciona à fronteira se o estado for novo ou se o custo for melhor}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{custo\PYGZus{}ate}\PYG{p}{)} \PYG{o+ow}{or} \PYG{p}{(}\PYG{n}{g} \PYG{o}{\PYGZlt{}} \PYG{n}{custo\PYGZus{}ate}\PYG{p}{[}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{]):}
+        \PYG{n}{custo\PYGZus{}ate}\PYG{p}{[}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{]} \PYG{o}{=} \PYG{n}{g}
+        \PYG{n}{f} \PYG{o}{=} \PYG{n}{g} \PYG{o}{+} \PYG{n}{hfun}\PYG{p}{(}\PYG{n}{filho}\PYG{o}{.}\PYG{n}{tabuleiro}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Prioridade: custo real + heurística}
+        \PYG{n}{heapq}\PYG{o}{.}\PYG{n}{heappush}\PYG{p}{(}\PYG{n}{fronteira}\PYG{p}{,} \PYG{p}{(}\PYG{n}{f}\PYG{p}{,} \PYG{n}{contador}\PYG{p}{,} \PYG{n}{filho}\PYG{p}{))}
+        \PYG{n}{contador} \PYG{o}{+=} \PYG{l+m+mi}{1}
+\end{MintedVerbatim}

@@ -1,6 +1,7 @@
 % =========================================================  
 % Capítulo 3 — Implementação e Experimentos  
 % =========================================================  
+  
 \section{Introdução}  
 Este capítulo apresenta a implementação prática dos métodos de busca discutidos nos Capítulos~1 e~2, aplicada ao problema do 8-puzzle. O objetivo é demonstrar como os conceitos teóricos — modelagem do espaço de estados, operadores, heurísticas, algoritmos UCS e $A^*$ — são traduzidos em código e, posteriormente, avaliar seu desempenho em instâncias reais do problema.  
   
@@ -139,6 +140,45 @@ def pecas_erradas(t):
     g = objetivo_tupla()  
     return sum(1 for i in range(len(t)) if t[i] != 9 and t[i] != g[i])  
 \end{minted}  
+  
+% --- Sessão Adicionada ---  
+\section{Gerenciamento da Fronteira}  
+  
+No contexto dos algoritmos de busca UCS e $A^*$, a \textbf{fronteira} é o conjunto de nós ainda não expandidos, candidatos a serem explorados nas próximas etapas. O gerenciamento eficiente da fronteira é essencial para garantir que sempre seja selecionado o nó mais promissor em termos de custo total estimado.   
+  
+\subsection{Estrutura de Dados Utilizada}  
+  
+A implementação faz uso da estrutura \texttt{heapq} do Python, que representa uma fila de prioridade baseada em min-heap. Essa estrutura permite inserir e remover elementos de forma eficiente, garantindo que o nó com menor valor de prioridade ($f(n) = g(n) + h(n)$) seja expandido primeiro.  
+  
+\subsection{Controle de Dominância e Estados Repetidos}  
+  
+Para evitar a expansão redundante de estados e garantir que o caminho ótimo seja preservado, o algoritmo realiza uma verificação antes de adicionar um novo nó à fronteira. Só são inseridos os estados que nunca foram gerados anteriormente ou aqueles cujo custo atual é melhor (menor) que o custo já registrado para o mesmo estado. Esse controle é feito através do dicionário \texttt{custo\_ate}, que armazena o menor custo já encontrado para cada configuração do tabuleiro.  
+  
+O trecho relevante do código é apresentado a seguir:  
+  
+\begin{minted}[frame=lines, fontsize=\footnotesize, linenos]{python}  
+for filho in atual.expandir():  
+    g = filho.custo  
+    # Só adiciona à fronteira se o estado for novo ou se o custo for melhor  
+    if (filho.tabuleiro not in custo_ate) or (g < custo_ate[filho.tabuleiro]):  
+        custo_ate[filho.tabuleiro] = g  
+        f = g + hfun(filho.tabuleiro)  # Prioridade: custo real + heurística  
+        heapq.heappush(fronteira, (f, contador, filho))  
+        contador += 1  
+\end{minted}  
+  
+\subsection{Funcionamento no Algoritmo}  
+  
+\begin{itemize}  
+    \item O dicionário \texttt{custo\_ate} guarda o menor custo já encontrado para cada estado do tabuleiro.  
+    \item Antes de inserir um novo nó na fronteira (\texttt{heapq.heappush}), verifica-se se o estado é inédito ou se há um caminho de menor custo para alcançá-lo.  
+    \item A prioridade na fila é dada pelo valor de $f(n) = g(n) + h(n)$, sendo $g(n)$ o custo real acumulado e $h(n)$ o valor da heurística.  
+    \item O campo \texttt{contador} serve para desempatar nós com mesmo valor de prioridade, evitando ambiguidades na ordenação.  
+\end{itemize}  
+  
+Esta abordagem garante que a busca se mantenha ótima e eficiente, evitando ciclos e expansões desnecessárias, conforme discutido em Russell e Norvig (2010). O uso de \texttt{heapq} como fila de prioridade min-heap é fundamental para o desempenho dos algoritmos de busca informada, permitindo acesso rápido ao nó mais promissor a cada etapa.  
+  
+% --- Fim da Sessão Adicionada ---  
   
 \section{Algoritmos de Busca}  
 A seguir, apresenta-se a função principal que implementa tanto UCS quanto $A^*$, conforme o parâmetro de entrada:  
@@ -295,4 +335,5 @@ Os resultados confirmam a teoria apresentada no Capítulo~2:
 A implementação prática dos algoritmos evidencia a importância de uma modelagem eficiente do espaço de estados e da escolha apropriada de heurísticas. Os experimentos demonstram que heurísticas admissíveis e consistentes, como a distância de Manhattan, proporcionam ganhos substanciais de eficiência sem comprometer a qualidade da solução.  
   
 O código-fonte integral encontra-se no Apêndice~A.  
+  
 % ---------------------------------------------------------  
